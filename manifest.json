@@ -1,0 +1,16 @@
+{
+  "name": "AbhishekIndia — Builder & Founder",
+  "short_name": "Abhishek",
+  "description": "Solo founder and builder from Delhi NCR — projects, tools and trading experiments.",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#16243d",
+  "theme_color": "#16243d",
+  "icons": [
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "img/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
