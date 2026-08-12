@@ -1,7 +1,7 @@
 /* abhishekindia.com — service worker (public site) */
 const VERSION = 'ai-v1';
 const CORE = [
-  '/index.html','/journal.html',
+  '/','/journal.html',
   '/nearpop.html','/uploadsure.html','/taxsavinglab.html','/couponboyz.html',
   '/stock-sniper-pro.html','/mcx-payoff-tools.html',
   '/crude.html','/gold.html','/silver.html','/usdinr.html',
