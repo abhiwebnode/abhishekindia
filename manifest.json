@@ -2,7 +2,7 @@
   "name": "AbhishekIndia — Builder & Founder",
   "short_name": "Abhishek",
   "description": "Solo founder and builder from Delhi NCR — projects, tools and trading experiments.",
-  "start_url": "/index.html",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
