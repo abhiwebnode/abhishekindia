@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Sniper Pro — Abhishek</title>
+<meta name="description" content="My own TradingView indicator for Indian positional trading — a state on every candle.">
+<meta property="og:title" content="Stock Sniper Pro — Abhishek">
+<meta property="og:description" content="My own TradingView indicator for Indian positional trading — a state on every candle.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/og-cover.webp">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Edu+TAS+Beginner:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+</head>
+<body>
+<nav>
+  <div class="container nav-in">
+    <a href="/" class="brand"><img src="img/logo-mark.webp" alt="AbhishekIndia" class="brand-logo"></a>
+    <button class="burger" id="burger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html#about">About</a>
+      <a href="index.html#work">What I do</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="journal.html">Journal</a>
+      <a href="index.html#contact" class="nav-cta">Get in touch</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">🌙</button>
+    </div>
+    </div>
+  </div>
+</nav>
+<div class="pd-hero">
+  <div class="container">
+    <a href="index.html#projects" class="back-link">← All projects</a>
+    <div class="pd-hero-grid">
+      <div>
+        <div class="pd-cat">Trading indicator</div>
+        <h1>Stock Sniper Pro</h1>
+        <p class="pd-lead">A Pine Script v6 indicator I built for the way I actually trade: clear, per-candle guidance instead of sparse, laggy signals.</p>
+        <div class="pd-meta">
+          <span class="chip status live">Live</span>
+          <span class="chip">Pine Script v6 · TradingView</span>
+        </div>
+        <div class="btns"><span class="chip">Not public yet</span></div>
+      </div>
+      <div><img src="img/stock-sniper-pro-hero.webp" alt="Stock Sniper Pro screenshot" class="pd-hero-img" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'"></div>
+    </div>
+  </div>
+</div>
+
+<div class="pd-body">
+  <div class="container">
+    <div class="pd-cols">
+      <div class="reveal">
+        <h2>Overview</h2>
+        <p>Most indicators fire a signal now and then and leave you guessing in between. Stock Sniper Pro marks a state on every candle — buy, sell, hold or exit — so the chart always tells you where you stand.</p>
+        <p>It's built on Heikin Ashi with a 233-SMA safety filter and a colour-coded dashboard, tuned for positional trading on Indian equities, futures and MCX commodities. Minimal clutter by design: no messy lines, just a clean read.</p>
+        <h2>What it does</h2>
+        <ul><li>A state marked on every candle — B / S / X / H</li><li>Heikin Ashi core with a 233-SMA trend safety filter</li><li>Colour-coded dashboard for an at-a-glance read</li><li>Full set of alert conditions</li><li>Tuned for Indian equity, futures & MCX positional trading</li></ul>
+        <p style="font-size:13px;color:var(--body);margin-top:24px;border-top:1px solid var(--line);padding-top:16px">Note: this is a personal tool built for my own use and shared for educational purposes only. It is not investment advice, a recommendation, or a solicitation to trade. Markets carry risk; do your own research.</p>
+      </div>
+      <aside>
+        <div class="spec reveal">
+          <h3>At a glance</h3>
+          <dl>
+            <dt>Category</dt><dd>Trading indicator</dd>
+            <dt>Status</dt><dd>Live</dd>
+            <dt>Built with</dt><dd>Pine Script v6 · TradingView</dd>
+            <dt>My role</dt><dd>Solo — design & Pine development</dd>
+          </dl>
+          
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div class="pd-gallery">
+  <div class="container">
+    <div class="gal-grid reveal">
+      <img src="img/sniper-1.webp" alt="Stock Sniper Pro screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+      <img src="img/sniper-2.webp" alt="Stock Sniper Pro screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+      <img src="img/sniper-3.webp" alt="Stock Sniper Pro screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+    </div>
+  </div>
+</div>
+
+<div class="pd-next">
+  <div class="container">
+    <div class="display">Next up: MCX Payoff Tools</div>
+    <div class="btns"><a href="mcx-payoff-tools.html" class="btn btn-primary">See MCX Payoff Tools →</a> <a href="index.html#projects" class="btn btn-ghost" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.3)">All projects</a></div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">© <span id="yr"></span> Abhishek · Built from Delhi NCR · <a href="index.html#home">Back to top ↑</a></div>
+</footer>
+<script>
+function initReveal(){
+  var els=document.querySelectorAll(".reveal:not(.in)");
+  if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in");});return;}
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target);}});},{threshold:.12});
+  els.forEach(function(e){io.observe(e);});
+}
+initReveal();
+var burger=document.getElementById("burger"),links=document.getElementById("navLinks");
+if(burger){burger.addEventListener("click",function(){links.classList.toggle("open");});
+links.addEventListener("click",function(e){if(e.target.tagName==="A")links.classList.remove("open");});}
+var yr=document.getElementById("yr");if(yr)yr.textContent=new Date().getFullYear();
+var tg=document.getElementById("themeToggle");
+function setThemeIcon(){var d=document.documentElement.getAttribute("data-theme")==="dark";if(tg)tg.textContent=d?"☀️":"🌙";}
+setThemeIcon();
+if(tg)tg.addEventListener("click",function(){var d=document.documentElement.getAttribute("data-theme")==="dark";var n=d?"light":"dark";document.documentElement.setAttribute("data-theme",n);try{localStorage.setItem("theme",n);}catch(e){}setThemeIcon();});
+</script>
+</body></html>

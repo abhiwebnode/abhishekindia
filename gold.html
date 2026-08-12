@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0B1A2E">
+<title>MCX Gold Mini — Strategy Payoff Analyzer</title>
+<style>
+  :root{
+    /* swap --font to: "Bookman Old Style", serif   or   "Times New Roman", serif */
+    --font: Arial, Helvetica, sans-serif;
+    --ink:#0B1A2E; --panel:#12263F; --panel2:#173250; --line:#25456B;
+    --text:#E9F1FA; --mute:#8AA6C4; --brass:#E3B84C; --brass-dim:rgba(227,184,76,.16);
+    --up:#2ED47A; --dn:#FF5A5A;
+    --upBg:rgba(46,212,122,.13); --dnBg:rgba(255,90,90,.12);
+    --upA:rgba(46,212,122,.22); --dnA:rgba(255,90,90,.20);
+    --r:10px;
+  }
+  [data-theme="light"]{
+    --ink:#E7EEF6; --panel:#FFFFFF; --panel2:#F1F6FB; --line:#C9DAEC;
+    --text:#0B1A2E; --mute:#54718F; --brass:#9A6E05; --brass-dim:rgba(154,110,5,.12);
+    --up:#0E9F5F; --dn:#D6342C;
+    --upBg:rgba(14,159,95,.11); --dnBg:rgba(214,52,44,.10);
+    --upA:rgba(14,159,95,.18); --dnA:rgba(214,52,44,.16);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font)}
+  body{
+    background:var(--ink); color:var(--text); font-size:13px; padding:12px 10px 4px;
+    max-width:780px; margin:0 auto; font-variant-numeric:tabular-nums; -webkit-text-size-adjust:100%;
+    min-height:100vh;
+  }
+  input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+  /* ---- header ---- */
+  header{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:14px}
+  .brand{display:flex;align-items:center;gap:9px;min-width:0}
+  .mark{width:30px;height:30px;flex:0 0 auto;border-radius:8px;background:linear-gradient(150deg,var(--brass),#8a5a12);
+        display:grid;place-items:center;font-weight:700;font-size:13px;color:#12161c;letter-spacing:-.5px;
+        box-shadow:0 0 0 1px rgba(240,169,59,.35), 0 6px 18px -8px var(--brass)}
+  h1{font-size:15px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;line-height:1.05}
+  h1 b{color:var(--brass);font-weight:700}
+  .sub{font-size:9.5px;letter-spacing:.8px;color:var(--mute);text-transform:uppercase;margin-top:2px}
+  .sub a{color:var(--mute)}
+  .theme-btn{flex:0 0 auto;background:var(--panel);border:1px solid var(--line);color:var(--mute);
+    padding:6px 11px;border-radius:20px;font-size:9.5px;font-weight:700;letter-spacing:1.2px;cursor:pointer}
+  .theme-btn:hover{color:var(--brass);border-color:var(--brass)}
+
+  /* ---- panels ---- */
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+  .panel-hd{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 11px;
+    border-bottom:1px solid var(--line);background:var(--panel2)}
+  .panel-hd h2{font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--mute);font-weight:700;
+    display:flex;align-items:center;gap:7px}
+  .panel-hd h2::before{content:'';width:3px;height:11px;background:var(--brass);border-radius:2px}
+  .hint{font-size:9.5px;color:var(--mute);letter-spacing:.5px}
+  .panel-bd{padding:10px}
+
+  .settings{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .field{display:flex;flex-direction:column;min-width:0}
+  .field label{font-size:8.5px;color:var(--mute);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+  .field input,.field select{border:1px solid var(--line);background:var(--panel2);color:var(--text);
+    padding:7px 8px;border-radius:7px;font-size:12.5px;width:100%;font-weight:500}
+  .field input:hover,.field select:hover{border-color:var(--brass)}
+
+  /* ---- legs ---- */
+  table{width:100%;border-collapse:collapse;table-layout:fixed}
+  th{font-size:8.5px;color:var(--mute);padding:7px 4px;text-align:left;border-bottom:1px solid var(--line);
+    background:var(--panel2);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+  td{padding:5px 4px;border-bottom:1px solid var(--line)}
+  tbody tr:last-child td{border-bottom:none}
+  select,.row-input{width:100%;border:1px solid transparent;border-radius:6px;padding:7px 2px;font-size:12.5px;
+    background:var(--panel2);color:var(--text);text-align:center;font-weight:500}
+  select:hover,.row-input:hover{border-color:var(--brass)}
+  .row-input:disabled{opacity:.3}
+  tr[data-side="long"] td:first-child{box-shadow:inset 3px 0 0 var(--up)}
+  tr[data-side="short"] td:first-child{box-shadow:inset 3px 0 0 var(--dn)}
+  .c-type{width:19%}.c-strk{width:21%}.c-dir{width:13%}.c-lots{width:13%}.c-avg{width:22%}.c-del{width:12%;text-align:center}
+  .btn-del{color:var(--mute);background:none;border:none;font-size:15px;cursor:pointer;line-height:1;padding:5px 7px}
+  .btn-del:hover{color:var(--dn)}
+  .empty{padding:20px 10px;text-align:center;color:var(--mute);font-size:11px;letter-spacing:.5px}
+
+  /* ---- buttons ---- */
+  .actions{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
+  .btn{padding:10px 4px;border-radius:8px;font-weight:700;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;
+    border:1px solid var(--line);background:var(--panel);color:var(--mute);cursor:pointer}
+  .btn:hover{color:var(--text);border-color:var(--brass)}
+  .b-add{background:linear-gradient(160deg,var(--brass),#c9832a);color:#12161c;border-color:transparent}
+  .b-add:hover{color:#12161c;filter:brightness(1.08)}
+  .b-clr:hover{color:var(--dn);border-color:var(--dn)}
+
+  .msg{display:none;padding:9px 11px;border-radius:8px;font-size:11px;margin-bottom:10px;letter-spacing:.3px;
+    background:var(--brass-dim);color:var(--brass);border:1px solid rgba(240,169,59,.35)}
+  .msg.on{display:block}
+
+  /* ---- hero: the risk beam ---- */
+  .hero{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px;margin-bottom:10px}
+  .hero-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+  .hero-cell label{display:block;font-size:8.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--mute);font-weight:700}
+  .hero-cell span{display:block;font-size:23px;font-weight:700;letter-spacing:-.5px;line-height:1.15;margin-top:3px;word-break:break-word}
+  .hero-cell em{display:block;font-style:normal;font-size:9.5px;color:var(--mute);letter-spacing:.5px;margin-top:2px}
+  .hero-cell.dn{text-align:right}
+  .up-c{color:var(--up)}.dn-c{color:var(--dn)}
+
+  .beam{display:flex;height:38px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--panel2)}
+  .seg{display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;letter-spacing:.5px;
+    min-width:0;transition:flex-basis .25s ease;white-space:nowrap;overflow:hidden}
+  .seg-loss{background:linear-gradient(180deg,var(--dnA),transparent);color:var(--dn);box-shadow:inset 0 -3px 0 var(--dn)}
+  .seg-prof{background:linear-gradient(180deg,var(--upA),transparent);color:var(--up);box-shadow:inset 0 -3px 0 var(--up)}
+  .seg.inf{background-image:repeating-linear-gradient(135deg,transparent 0 7px,rgba(255,255,255,.07) 7px 14px)}
+  .beam-foot{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;gap:10px}
+  .beam-foot b{font-size:13px;font-weight:700;letter-spacing:.5px}
+  .beam-foot i{font-style:normal;font-size:9.5px;color:var(--mute);letter-spacing:.4px;text-align:right}
+
+  /* ---- stat cards ---- */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 11px;position:relative;overflow:hidden}
+  .card::after{content:'';position:absolute;inset:0 auto 0 0;width:2px;background:var(--brass);opacity:.55}
+  .card label{font-size:8.5px;color:var(--mute);text-transform:uppercase;font-weight:700;letter-spacing:1.2px}
+  .card span{display:block;font-size:16px;font-weight:700;margin-top:3px;word-break:break-word;letter-spacing:-.2px}
+  .card em{display:block;font-style:normal;font-size:9.5px;color:var(--mute);margin-top:2px;letter-spacing:.4px}
+  .wide{grid-column:span 2}
+  .wide span{font-size:14px}
+
+  .chart-box{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:8px 6px 4px;height:250px;
+    margin-bottom:10px;position:relative}
+  .chart-fallback{display:none;position:absolute;inset:0;align-items:center;justify-content:center;text-align:center;
+    font-size:11px;color:var(--mute);padding:20px;letter-spacing:.4px}
+
+  .pnl-wrap{max-height:320px;overflow-y:auto}
+  .pnl-table{font-size:11.5px}
+  .pnl-table th{position:sticky;top:0;z-index:5}
+  .pnl-table td{padding:7px 10px;font-weight:400}
+  .pnl-table td:nth-child(2),.pnl-table td:nth-child(3){text-align:right}
+  .pnl-table td:nth-child(3){font-size:9px;letter-spacing:1px;font-weight:700}
+  .txt-up{color:var(--up)}.txt-dn{color:var(--dn)}
+  .tag{font-size:8px;font-weight:700;letter-spacing:1px;padding:1px 4px;
+    border-radius:4px;margin-left:6px;vertical-align:1px;font-family:var(--font)}
+  .tag-k{background:var(--brass-dim);color:var(--brass)}
+  .tag-be{background:var(--brass);color:#12161c}
+  .tag-sp{background:var(--line);color:var(--text)}
+  tr.row-up td{background:var(--upBg)}
+  tr.row-dn td{background:var(--dnBg)}
+  tr.is-be td:first-child{box-shadow:inset 3px 0 0 var(--brass)}
+  tr.is-spot td:first-child{box-shadow:inset 3px 0 0 var(--text)}
+  .hero-cell{padding:9px 10px;border-radius:8px}
+  .hero-cell.up{background:var(--upBg)}
+  .hero-cell.dn{background:var(--dnBg)}
+
+  footer{font-size:9px;color:var(--mute);text-align:center;padding:12px 4px 16px;line-height:1.7;letter-spacing:.4px}
+  @media (max-width:380px){.settings{grid-template-columns:repeat(2,1fr)}.hero-cell span{font-size:19px}}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* ===== abhishekindia.com theme sync (navy + orange, dark/light) ===== */
+  :root{--ink:#0e1626;--panel:#16233b;--panel2:#1c2c48;--line:#28374f;--text:#f1f5fb;--mute:#aab8cf;--brass:#ff7d33;--brass-dim:rgba(255,125,51,.16)}
+  [data-theme="light"]{--ink:#f3f6fc;--panel:#ffffff;--panel2:#eef3fb;--line:#dde5f0;--text:#16243d;--mute:#4a5876;--brass:#d9590f;--brass-dim:rgba(217,89,15,.10)}
+  .mark{background:linear-gradient(150deg,var(--brass),#b8480d)!important;color:#fff!important;box-shadow:0 0 0 1px rgba(242,106,27,.35),0 6px 18px -8px var(--brass)!important}
+  .b-add{background:linear-gradient(160deg,var(--brass),#c24f0c)!important;color:#fff!important;border-color:transparent!important}
+  .b-add:hover{color:#fff!important;filter:brightness(1.06)}
+  .msg{border-color:var(--brass-dim)!important}
+  /* top bar */
+  .sbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  .sbar-home img{height:34px;display:block;background:#fff;padding:3px 6px;border-radius:8px}
+  .sbar-switch{display:flex;gap:6px;flex-wrap:wrap}
+  .sbar-switch a,.sbar-back{font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--mute);border:1px solid var(--line);background:var(--panel);padding:6px 10px;border-radius:20px;text-decoration:none;white-space:nowrap}
+  .sbar-switch a:hover,.sbar-back:hover{color:var(--brass);border-color:var(--brass)}
+  .sbar-switch a.cur{background:var(--brass);color:#fff;border-color:transparent}
+</style>
+<script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+</head>
+<body>
+<div class="sbar">
+  <a class="sbar-home" href="index.html" title="Home"><img src="img/logo-mark.webp" alt="AbhishekIndia"></a>
+  <nav class="sbar-switch"><a href="crude.html">Crude</a><a href="gold.html" class="cur">Gold</a><a href="silver.html">Silver</a><a href="usdinr.html">USDINR</a></nav>
+  <a class="sbar-back" href="mcx-payoff-tools.html">↩ Tools</a>
+</div>
+
+
+<header>
+  <div class="brand">
+    <div class="mark">Au</div>
+    <div>
+      <h1>Gold <b>Payoff</b></h1>
+      <div class="sub">MCX GOLDM · ₹/10g · by <a href="mailto:abhishekh328@gmail.com">Abhishek</a></div>
+    </div>
+  </div>
+  <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">LIGHT</button>
+</header>
+
+<div class="panel">
+  <div class="panel-hd"><h2>Contract &amp; range</h2><span class="hint mono" id="lotHint"></span></div>
+  <div class="panel-bd settings">
+    <div class="field"><label>Contract</label>
+      <select id="contract">
+        <option value="10">Gold Mini 100g</option>
+        <option value="100">Gold 1kg</option>
+        <option value="0">Custom</option>
+      </select>
+    </div>
+    <div class="field"><label>Multiplier</label><input type="number" id="lotSize" value="10" min="1"></div>
+    <div class="field"><label>Spot / CMP</label><input type="number" id="spot" value="152000" step="1"></div>
+    <div class="field"><label>From</label><input type="number" id="rangeFrom" value="144000"></div>
+    <div class="field"><label>To</label><input type="number" id="rangeTo" value="162000"></div>
+    <div class="field"><label>Step</label><input type="number" id="priceStep" value="500" min="1"></div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-hd"><h2>Legs</h2><span class="hint mono" id="legHint"></span></div>
+  <table>
+    <thead>
+      <tr><th class="c-type">Type</th><th class="c-strk">Strike</th><th class="c-dir">B/S</th><th class="c-lots">Lots</th><th class="c-avg">Price</th><th class="c-del"></th></tr>
+    </thead>
+    <tbody id="posBody"></tbody>
+  </table>
+  <div class="empty" id="emptyRow">No legs yet — tap ADD LEG</div>
+</div>
+
+<div class="actions">
+  <button class="btn b-add" onclick="addRow()">Add leg</button>
+  <button class="btn" onclick="showPresets()">Preset</button>
+  <button class="btn" onclick="exportCsv()">CSV</button>
+  <button class="btn b-clr" onclick="clearAll()">Clear</button>
+</div>
+
+<div class="msg" id="msg"></div>
+
+<div id="results" style="display:none">
+
+  <div class="hero">
+    <div class="hero-row">
+      <div class="hero-cell up"><label>Max profit</label><span class="up-c num" id="maxP"></span><em id="maxPat"></em></div>
+      <div class="hero-cell dn"><label>Max loss</label><span class="dn-c num" id="maxL"></span><em id="maxLat"></em></div>
+    </div>
+    <div class="beam">
+      <div class="seg seg-loss" id="segLoss"></div>
+      <div class="seg seg-prof" id="segProf"></div>
+    </div>
+    <div class="beam-foot"><b class="num" id="rr"></b><i id="rrNote"></i></div>
+  </div>
+
+  <div class="cards">
+    <div class="card"><label>Net premium</label><span class="num" id="netPrem"></span><em id="netPremNote"></em></div>
+    <div class="card"><label>P&amp;L at spot</label><span class="num" id="spotPnl"></span><em id="spotNote"></em></div>
+    <div class="card wide"><label>Breakeven</label><span class="num" id="bePoints"></span><em id="beNote"></em></div>
+  </div>
+
+  <div class="chart-box">
+    <canvas id="pnlChart"></canvas>
+    <div class="chart-fallback" id="chartFallback">Chart library didn't load — you're offline or the CDN is blocked. Numbers and table below still work.</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-hd"><h2>Payoff at expiry</h2><span class="hint mono" id="rowHint"></span></div>
+    <div class="pnl-wrap">
+      <table class="pnl-table">
+        <thead><tr><th>Price</th><th style="text-align:right">P&amp;L</th><th style="text-align:right">Status</th></tr></thead>
+        <tbody id="payoffTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer>Gold Mini: 100g lot quoted per 10g, so multiplier is 10. Strike interval ₹500. Expiry payoff only — ignores time value, IV, brokerage, STT and MTM margin.<br>Saves automatically in this browser. Not investment advice.</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const LSK = 'goldm_v1';
+let rowId = 0, chart = null, chartReady = false, saveTimer = null;
+
+/* ---------- helpers ---------- */
+const num = v => { const n = parseFloat(v); return Number.isFinite(n) ? n : NaN; };
+const inr = n => (n < 0 ? '-' : '') + '₹' + Math.round(Math.abs(n)).toLocaleString('en-IN');
+function inrShort(n){
+  const a = Math.abs(n), s = n < 0 ? '-' : '';
+  if (a >= 1e7) return s + '₹' + (a/1e7).toFixed(2) + 'Cr';
+  if (a >= 1e5) return s + '₹' + (a/1e5).toFixed(2) + 'L';
+  if (a >= 1e3) return s + '₹' + (a/1e3).toFixed(1) + 'k';
+  return s + '₹' + Math.round(a);
+}
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+};
+const cssVar = n => getComputedStyle(document.body).getPropertyValue(n).trim();
+
+/* ---------- theme ---------- */
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  $('themeBtn').textContent = t === 'dark' ? 'LIGHT' : 'DARK';
+  store.set('theme', t);
+}
+function toggleTheme(){
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  if (chart) calculate();
+}
+
+/* ---------- legs ---------- */
+function addRow(d){
+  d = Object.assign({ t:'CE', s:152000, dir:'long', l:1, a:2600 }, d || {});
+  const id = rowId++;
+  const tr = document.createElement('tr');
+  tr.id = 'r_' + id;
+  tr.dataset.side = d.dir;
+  tr.innerHTML =
+    `<td class="c-type"><select id="t${id}">
+        <option value="CE"${d.t==='CE'?' selected':''}>CE</option>
+        <option value="PE"${d.t==='PE'?' selected':''}>PE</option>
+        <option value="FUT"${d.t==='FUT'?' selected':''}>FUT</option>
+      </select></td>
+     <td class="c-strk"><input type="number" id="s${id}" class="row-input" value="${d.s}" step="500" min="0"${d.t==='FUT'?' disabled':''}></td>
+     <td class="c-dir"><select id="p${id}">
+        <option value="long"${d.dir==='long'?' selected':''}>B</option>
+        <option value="short"${d.dir==='short'?' selected':''}>S</option>
+      </select></td>
+     <td class="c-lots"><input type="number" id="l${id}" class="row-input" value="${d.l}" min="1" step="1"></td>
+     <td class="c-avg"><input type="number" id="a${id}" class="row-input" value="${d.a}" step="0.1" min="0"></td>
+     <td class="c-del"><button class="btn-del" title="Remove leg" onclick="removeRow(${id})">✕</button></td>`;
+  $('posBody').appendChild(tr);
+  $('t'+id).addEventListener('change', () => { $('s'+id).disabled = $('t'+id).value === 'FUT'; });
+  $('p'+id).addEventListener('change', () => { tr.dataset.side = $('p'+id).value; });
+  refresh();
+}
+function removeRow(id){ const el = $('r_'+id); if (el) el.remove(); refresh(); }
+function clearAll(){ if (confirm('Remove all legs?')) { $('posBody').innerHTML = ''; refresh(); } }
+
+function showPresets(){
+  const spot = num($('spot').value) || 6000;
+  const k = Math.round(spot / 500) * 500;
+  const menu = [
+    ['1  Bull call spread', [{t:'CE',s:k,dir:'long',l:1,a:2600},{t:'CE',s:k+1500,dir:'short',l:1,a:1100}]],
+    ['2  Bear put spread',  [{t:'PE',s:k,dir:'long',l:1,a:2600},{t:'PE',s:k-1500,dir:'short',l:1,a:1100}]],
+    ['3  Long straddle',    [{t:'CE',s:k,dir:'long',l:1,a:2600},{t:'PE',s:k,dir:'long',l:1,a:2600}]],
+    ['4  Short strangle',   [{t:'CE',s:k+1500,dir:'short',l:1,a:1100},{t:'PE',s:k-1500,dir:'short',l:1,a:1100}]],
+    ['5  Iron condor',      [{t:'PE',s:k-3000,dir:'long',l:1,a:450},{t:'PE',s:k-1000,dir:'short',l:1,a:1700},{t:'CE',s:k+1000,dir:'short',l:1,a:1700},{t:'CE',s:k+3000,dir:'long',l:1,a:450}]],
+    ['6  Covered future',   [{t:'FUT',s:0,dir:'long',l:1,a:k},{t:'CE',s:k+1500,dir:'short',l:1,a:1100}]]
+  ];
+  const pick = prompt('Load a preset (replaces current legs):\n\n' + menu.map(m => m[0]).join('\n') + '\n\nEnter number:');
+  const i = parseInt(pick, 10) - 1;
+  if (!(i >= 0 && i < menu.length)) return;
+  $('posBody').innerHTML = '';
+  menu[i][1].forEach(addRow);
+}
+
+function readPositions(){
+  const out = [], bad = [];
+  document.querySelectorAll('#posBody tr').forEach((tr, i) => {
+    const id = tr.id.split('_')[1];
+    const p = {
+      t: $('t'+id).value,
+      s: num($('s'+id).value),
+      dir: $('p'+id).value,
+      l: Math.trunc(num($('l'+id).value)),
+      a: num($('a'+id).value)
+    };
+    if (p.t === 'FUT') p.s = 0;
+    if (!Number.isFinite(p.a) || !Number.isFinite(p.l) || p.l < 1 || (p.t !== 'FUT' && (!Number.isFinite(p.s) || p.s <= 0))) bad.push(i+1);
+    else out.push(p);
+  });
+  return { positions: out, bad };
+}
+
+/* ---------- payoff engine (exact, piecewise-linear) ---------- */
+function payoff(px, positions, lot){
+  let total = 0;
+  for (const p of positions){
+    const isB = p.dir === 'long';
+    let per;
+    if (p.t === 'FUT') per = isB ? px - p.a : p.a - px;
+    else if (p.t === 'CE'){ const iv = Math.max(0, px - p.s); per = isB ? iv - p.a : p.a - iv; }
+    else { const iv = Math.max(0, p.s - px); per = isB ? iv - p.a : p.a - iv; }
+    total += per * p.l * lot;
+  }
+  return total;
+}
+
+// A flat max-loss zone spans several kinks — describe it as a range, not one price.
+function whereLabel(nodes, ys, val){
+  const hit = [];
+  ys.forEach((y,i) => { if (Math.abs(y - val) < 1e-6) hit.push(i); });
+  const groups = [];
+  hit.forEach(i => {
+    const g = groups[groups.length-1];
+    if (g && i === g[g.length-1] + 1) g.push(i); else groups.push([i]);
+  });
+  const last = nodes.length - 1;
+  return 'at ' + groups.map(g => {
+    const a = g[0], b = g[g.length-1];
+    if (a === 0 && b === last) return 'any price';
+    if (a === 0) return '≤ ' + Math.round(nodes[b]);
+    if (b === last) return '≥ ' + Math.round(nodes[a]);
+    if (a === b) return Math.round(nodes[a]);
+    return Math.round(nodes[a]) + '–' + Math.round(nodes[b]);
+  }).join(' & ');
+}
+
+// Payoff is linear between strikes, so max/min/breakevens are exact at the kinks.
+function analyze(positions, lot){
+  const strikes = [...new Set(positions.filter(p => p.t !== 'FUT').map(p => p.s))].sort((a,b) => a-b);
+  const refs = strikes.concat(positions.map(p => p.a)).filter(v => v > 0);
+  const far = (refs.length ? Math.max(...refs) : 5000) * 2 + 5000;
+  const nodes = [...new Set([0, ...strikes, far])].sort((a,b) => a-b);
+  const ys = nodes.map(x => payoff(x, positions, lot));
+  const tol = 1e-6;
+  const slopeUp = (payoff(far + 1000, positions, lot) - ys[ys.length-1]) / 1000;
+
+  let hiI = 0, loI = 0;
+  ys.forEach((y,i) => { if (y > ys[hiI]) hiI = i; if (y < ys[loI]) loI = i; });
+
+  const res = {
+    maxProfit: slopeUp > tol ? Infinity : ys[hiI], maxProfitAt: whereLabel(nodes, ys, ys[hiI]),
+    maxLoss:   slopeUp < -tol ? -Infinity : ys[loI], maxLossAt: whereLabel(nodes, ys, ys[loI]),
+    be: []
+  };
+
+  for (let i = 0; i < nodes.length - 1; i++){
+    const y1 = ys[i], y2 = ys[i+1];
+    if (Math.abs(y1) < tol) { res.be.push(nodes[i]); continue; }
+    if (y1 * y2 < 0) res.be.push(nodes[i] + (nodes[i+1] - nodes[i]) * (-y1 / (y2 - y1)));
+  }
+  if (Math.abs(ys[ys.length-1]) < tol) res.be.push(nodes[nodes.length-1]);
+  res.be = [...new Set(res.be.map(v => Math.round(v * 100) / 100))].sort((a,b) => a-b);
+  return res;
+}
+
+/* ---------- render ---------- */
+function refresh(){
+  $('emptyRow').style.display = document.querySelectorAll('#posBody tr').length ? 'none' : 'block';
+  save();
+  calculate();
+}
+
+function warn(text){
+  const m = $('msg');
+  if (!text){ m.className = 'msg'; m.textContent = ''; return; }
+  m.className = 'msg on'; m.textContent = text;
+}
+
+// Signature element: risk and reward drawn to scale, side by side.
+function drawBeam(a){
+  const L = a.maxLoss === -Infinity ? null : Math.max(0, -a.maxLoss);
+  const P = a.maxProfit === Infinity ? null : Math.max(0, a.maxProfit);
+  const eLoss = $('segLoss'), eProf = $('segProf');
+  let lw, pw;
+  if (L === null && P === null){ lw = pw = 50; }
+  else if (L === null){ lw = 72; pw = 28; }
+  else if (P === null){ lw = 28; pw = 72; }
+  else {
+    const t = L + P;
+    lw = t ? (L / t) * 100 : 50;
+    pw = 100 - lw;
+    lw = Math.min(88, Math.max(12, lw)); pw = 100 - lw;
+  }
+  eLoss.style.flexBasis = lw + '%'; eProf.style.flexBasis = pw + '%';
+  eLoss.classList.toggle('inf', L === null);
+  eProf.classList.toggle('inf', P === null);
+  eLoss.textContent = L === null ? '∞ RISK' : '-' + inrShort(L);
+  eProf.textContent = P === null ? 'REWARD ∞' : inrShort(P);
+}
+
+function calculate(){
+  const lot = num($('lotSize').value);
+  let from = num($('rangeFrom').value), to = num($('rangeTo').value);
+  let step = num($('priceStep').value);
+  const spot = num($('spot').value);
+  const { positions, bad } = readPositions();
+
+  $('legHint').textContent = positions.length ? positions.length + ' LEG' + (positions.length > 1 ? 'S' : '') : '';
+  $('lotHint').textContent = Number.isFinite(lot) ? '×' + lot + ' (100g lot ÷ 10g quote)' : '';
+
+  if (!positions.length){
+    $('results').style.display = 'none';
+    warn(bad.length ? 'Leg ' + bad.join(', ') + ' is incomplete — fill strike, lots and price.' : '');
+    return;
+  }
+  if (!Number.isFinite(lot) || lot <= 0){ warn('Lot size must be a positive number.'); $('results').style.display = 'none'; return; }
+  if (!Number.isFinite(from) || !Number.isFinite(to) || from >= to){ warn('Range "From" must be below "To".'); $('results').style.display = 'none'; return; }
+  if (!Number.isFinite(step) || step <= 0) step = 100;
+  if ((to - from) / step > 800) step = Math.ceil((to - from) / 800);
+
+  warn(bad.length ? 'Skipping incomplete leg ' + bad.join(', ') + '.' : '');
+
+  const a = analyze(positions, lot);
+
+  $('maxP').textContent = a.maxProfit === Infinity ? 'Unlimited' : inr(a.maxProfit);
+  $('maxPat').textContent = a.maxProfit === Infinity ? 'rises with price' : a.maxProfitAt;
+  $('maxL').textContent = a.maxLoss === -Infinity ? 'Unlimited' : inr(a.maxLoss);
+  $('maxLat').textContent = a.maxLoss === -Infinity ? 'grows with price' : a.maxLossAt;
+  drawBeam(a);
+
+  if (a.maxProfit === Infinity || a.maxLoss === -Infinity || Math.abs(a.maxLoss) < 1e-9){
+    $('rr').textContent = a.maxLoss === -Infinity ? 'UNDEFINED RISK' : 'OPEN-ENDED';
+    $('rr').style.color = a.maxLoss === -Infinity ? 'var(--dn)' : 'var(--brass)';
+    $('rrNote').textContent = a.maxLoss === -Infinity ? 'loss has no cap on the upside' : 'profit has no cap on the upside';
+  } else {
+    const r = a.maxProfit / Math.abs(a.maxLoss);
+    $('rr').textContent = '1 : ' + r.toFixed(2);
+    $('rr').style.color = r >= 1 ? 'var(--up)' : 'var(--text)';
+    $('rrNote').textContent = 'risk ' + inrShort(Math.abs(a.maxLoss)) + ' to make ' + inrShort(a.maxProfit);
+  }
+
+  let netPrem = 0;
+  positions.forEach(p => { if (p.t !== 'FUT') netPrem += (p.dir === 'long' ? -1 : 1) * p.a * p.l * lot; });
+  $('netPrem').textContent = inr(netPrem);
+  $('netPrem').style.color = netPrem >= 0 ? 'var(--up)' : 'var(--dn)';
+  $('netPremNote').textContent = netPrem >= 0 ? 'credit received' : 'debit paid';
+
+  if (Number.isFinite(spot)){
+    const sp = payoff(spot, positions, lot);
+    $('spotPnl').textContent = inr(sp);
+    $('spotPnl').style.color = sp >= 0 ? 'var(--up)' : 'var(--dn)';
+    $('spotNote').textContent = 'if gold expires at ' + Math.round(spot);
+  } else { $('spotPnl').textContent = '—'; $('spotNote').textContent = 'enter a spot price'; }
+
+  $('bePoints').textContent = a.be.length ? a.be.map(v => v.toFixed(1)).join('   ·   ') : 'None';
+  $('beNote').textContent = a.be.length
+    ? (a.be.length === 1 ? 'exact crossover' : a.be.length + ' crossovers')
+    : (payoff(0, positions, lot) >= 0 ? 'profitable across all prices' : 'never breaks even');
+
+  // table rows: grid + every strike + every breakeven + spot, inside range
+  const marks = new Map();
+  for (let px = from; px <= to + 1e-9; px += step) marks.set(+px.toFixed(2), '');
+  positions.forEach(p => { if (p.t !== 'FUT' && p.s >= from && p.s <= to) marks.set(+p.s.toFixed(2), 'K'); });
+  a.be.forEach(v => { if (v >= from && v <= to) marks.set(+v.toFixed(2), 'BE'); });
+  if (Number.isFinite(spot) && spot >= from && spot <= to) marks.set(+spot.toFixed(2), 'SPOT');
+
+  const tagMap = { K:'tag-k', BE:'tag-be', SPOT:'tag-sp' };
+  const rowCls = { BE:' is-be', SPOT:' is-spot' };
+  const keys = [...marks.keys()].sort((x,y) => x-y);
+  $('payoffTableBody').innerHTML = keys.map(px => {
+    const y = payoff(px, positions, lot);
+    const cls = y >= 0 ? 'txt-up' : 'txt-dn';
+    const m = marks.get(px);
+    const tag = m ? `<span class="tag ${tagMap[m]}">${m}</span>` : '';
+    return `<tr class="${y >= 0 ? 'row-up' : 'row-dn'}${rowCls[m] || ''}"><td>${px % 1 ? px.toFixed(1) : px}${tag}</td><td class="${cls}">${inr(y)}</td><td class="${cls}">${y >= 0 ? 'PROFIT' : 'LOSS'}</td></tr>`;
+  }).join('');
+  $('rowHint').textContent = keys.length + ' ROWS';
+  $('results').style.display = 'block';
+
+  drawChart(positions, lot, from, to, a, spot);
+}
+
+function drawChart(positions, lot, from, to, a, spot){
+  if (!chartReady){ $('chartFallback').style.display = 'flex'; return; }
+  const brass = cssVar('--brass'), muted = cssVar('--mute'), line = cssVar('--line');
+  const upA = cssVar('--upA'), dnA = cssVar('--dnA'), panel = cssVar('--panel'), text = cssVar('--text');
+
+  const xs = new Set();
+  const n = 260, d = (to - from) / n;
+  for (let i = 0; i <= n; i++) xs.add(+(from + i*d).toFixed(4));
+  positions.forEach(p => { if (p.t !== 'FUT' && p.s > from && p.s < to) xs.add(p.s); });
+  a.be.forEach(v => { if (v > from && v < to) xs.add(v); });
+  const pts = [...xs].sort((x,y) => x-y).map(x => ({ x, y: payoff(x, positions, lot) }));
+
+  const datasets = [{
+    label: 'P&L', data: pts, parsing: false, borderColor: brass, borderWidth: 2.25,
+    pointRadius: 0, tension: 0, fill: { target: { value: 0 }, above: upA, below: dnA }
+  }];
+  const bePts = a.be.filter(v => v >= from && v <= to).map(x => ({ x, y: 0 }));
+  if (bePts.length) datasets.push({ type:'scatter', label:'Breakeven', data:bePts, parsing:false,
+    pointRadius:4.5, pointBackgroundColor:brass, pointBorderColor:panel, pointBorderWidth:2 });
+  if (Number.isFinite(spot) && spot >= from && spot <= to)
+    datasets.push({ type:'scatter', label:'Spot', data:[{x:spot, y:payoff(spot, positions, lot)}], parsing:false,
+      pointRadius:6, pointStyle:'rectRot', pointBackgroundColor:text, pointBorderColor:panel, pointBorderWidth:2 });
+
+  if (chart) chart.destroy();
+  chart = new Chart($('pnlChart').getContext('2d'), {
+    type: 'line',
+    data: { datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'nearest', axis: 'x', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: panel, borderColor: line, borderWidth: 1, titleColor: brass, bodyColor: text,
+          titleFont: { family:'Arial', size:11, weight:'bold' }, bodyFont: { family:'Arial', size:11 },
+          padding: 9, displayColors: false,
+          callbacks: {
+            title: it => 'GOLD MINI @ ' + Math.round(it[0].parsed.x),
+            label: it => (it.dataset.label === 'P&L' ? '' : it.dataset.label + '  ') + inr(it.parsed.y)
+          }
+        }
+      },
+      scales: {
+        x: { type:'linear', min:from, max:to,
+             grid: { color: line, drawTicks:false },
+             ticks: { font:{family:'Arial', size:10}, color: muted, maxTicksLimit:6, padding:6, callback: v => Math.round(v) } },
+        y: { grid: { color: c => c.tick.value === 0 ? muted : line, lineWidth: c => c.tick.value === 0 ? 1.5 : 1, drawTicks:false },
+             ticks: { font:{family:'Arial', size:10}, color: muted, padding:6, callback: v => inrShort(v) } }
+      }
+    }
+  });
+}
+
+/* ---------- persistence: writes on every edit, 300ms debounce ---------- */
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    const cfg = {
+      s: { l:$('lotSize').value, f:$('rangeFrom').value, t:$('rangeTo').value, st:$('priceStep').value, sp:$('spot').value, c:$('contract').value },
+      p: []
+    };
+    document.querySelectorAll('#posBody tr').forEach(tr => {
+      const id = tr.id.split('_')[1];
+      cfg.p.push({ t:$('t'+id).value, s:$('s'+id).value, d:$('p'+id).value, l:$('l'+id).value, a:$('a'+id).value });
+    });
+    store.set(LSK, JSON.stringify(cfg));
+  }, 300);
+}
+
+function exportCsv(){
+  const rows = [...document.querySelectorAll('#payoffTableBody tr')].map(tr =>
+    [...tr.children].map((td,i) => {
+      let v = td.textContent.replace(/[₹,]/g,'');
+      if (i === 0) v = v.replace(/(K|BE|SPOT)$/,'');
+      return v.trim();
+    }).join(','));
+  if (!rows.length){ warn('Nothing to export yet — add a leg first.'); return; }
+  const blob = new Blob(['Price,PnL,Status\n' + rows.join('\n')], { type:'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'gold-payoff.csv'; a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ---------- boot ---------- */
+document.addEventListener('input', e => { if (e.target.closest('#posBody, .settings')) refresh(); });
+document.addEventListener('change', e => {
+  if (e.target.id === 'contract'){
+    const v = +e.target.value;
+    if (v) { $('lotSize').value = v; refresh(); }
+  } else if (e.target.closest('#posBody, .settings')) refresh();
+});
+
+applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+
+(function init(){
+  const saved = store.get(LSK);
+  if (saved){
+    try {
+      const c = JSON.parse(saved);
+      $('lotSize').value = c.s.l; $('rangeFrom').value = c.s.f; $('rangeTo').value = c.s.t;
+      if (c.s.st) $('priceStep').value = c.s.st;
+      if (c.s.sp) $('spot').value = c.s.sp;
+      if (c.s.c) $('contract').value = c.s.c;
+      (c.p || []).forEach(p => addRow({ t: p.t === 'Fut' ? 'FUT' : p.t, s: p.s, dir: p.d, l: p.l, a: p.a }));
+    } catch(e){ addRow(); }
+  }
+  if (!document.querySelectorAll('#posBody tr').length) addRow();
+  refresh();
+})();
+
+const sc = document.createElement('script');
+sc.src = 'https://cdn.jsdelivr.net/npm/chart.js@4';
+sc.onload = () => { chartReady = true; $('chartFallback').style.display = 'none'; calculate(); };
+sc.onerror = () => { $('chartFallback').style.display = 'flex'; };
+document.head.appendChild(sc);
+</script>
+</body>
+</html>

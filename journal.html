@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journal — Abhishek</title>
+<meta name="description" content="Build log by Abhishek — short notes on what I'm shipping across NearPop, UploadSure, TaxSavingLab and my trading tools.">
+<meta property="og:title" content="Journal — Abhishek">
+<meta property="og:description" content="Build log by Abhishek — short notes on what I'm shipping across NearPop, UploadSure, TaxSavingLab and my trading tools.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/og-cover.webp">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Edu+TAS+Beginner:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+</head>
+<body>
+<nav>
+  <div class="container nav-in">
+    <a href="/" class="brand"><img src="img/logo-mark.webp" alt="AbhishekIndia" class="brand-logo"></a>
+    <button class="burger" id="burger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html#about">About</a>
+      <a href="index.html#work">What I do</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="journal.html">Journal</a>
+      <a href="index.html#contact" class="nav-cta">Get in touch</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">🌙</button>
+    </div>
+  </div>
+</nav>
+<div class="pd-hero">
+  <div class="container">
+    <a href="/" class="back-link">← Home</a>
+    <div style="max-width:640px">
+      <div class="pd-cat">Journal</div>
+      <h1>Build log.</h1>
+      <p class="pd-lead">Short notes on what I'm shipping — products, experiments, and the occasional lesson. Newest first.</p>
+    </div>
+  </div>
+</div>
+
+<div class="jr-wrap">
+  <div class="container">
+    <div class="jr-list" id="jrList">
+      <p class="jr-status">Loading journal…</p>
+    </div>
+    <!-- fallback entries used only if the Sheet can't be reached -->
+    <template id="jrFallback">
+<article class="jr-entry in">
+      <div class="jr-date">August 2026</div>
+      <h2>Launched abhishekindia.com</h2>
+      <div class="jr-tags"><span class="jr-tag">site</span><span class="jr-tag">meta</span></div>
+      <p>Finally gave my projects a proper home. Built this site as a single place to show what I'm building — hyperlocal, utility tools, trading experiments — instead of it all being scattered. Static, fast, and easy to update. This journal is where I'll log what I ship next.</p>
+    </article>
+<article class="jr-entry in">
+      <div class="jr-date">July 2026</div>
+      <h2>UploadSure got a blueprint redesign</h2>
+      <div class="jr-tags"><span class="jr-tag">uploadsure</span><span class="jr-tag">design</span></div>
+      <p>The tools worked, but the site looked like every other file-compressor out there. Rolled out a full visual overhaul — a technical-drafting look with a navy-and-cyan palette and monospace type — so it finally feels like its own thing. Also expanded the PDF kit from 3 tools to 10.</p>
+    </article>
+<article class="jr-entry in">
+      <div class="jr-date">July 2026</div>
+      <h2>Built payoff calculators for the metals I trade</h2>
+      <div class="jr-tags"><span class="jr-tag">trading</span><span class="jr-tag">tools</span></div>
+      <p>I kept eyeballing options payoffs before entering positions, so I built small single-file calculators for the exact contracts I trade — crude, Gold Mini, Silver Mini and USDINR — each with the right lot sizes and strike steps. Plots max profit, max loss, breakevens and the whole curve.</p>
+    </article>
+    </template>
+  </div>
+</div>
+
+<script>
+(function(){
+  var JOURNAL_URL = "https://script.google.com/macros/s/AKfycbxmuKijYyvmVPDx6i-9EIBlCArDtZRZL7IlgoYnSJ5ppGmGEZRUeKUgPTtFijxlrdJ8Og/exec";
+  var box = document.getElementById("jrList");
+  function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function render(list){
+    if(!list.length){ box.innerHTML = '<p class="jr-status">No entries yet.</p>'; return; }
+    box.innerHTML = list.map(function(e){
+      var tags = (e.tags && e.tags.length)
+        ? '<div class="jr-tags">' + e.tags.map(function(t){return '<span class="jr-tag">'+esc(t)+'</span>';}).join("") + '</div>'
+        : '';
+      return '<article class="jr-entry in">'
+           +   '<div class="jr-date">'+esc(e.date)+'</div>'
+           +   '<h2>'+esc(e.title)+'</h2>'
+           +   tags
+           +   '<p>'+esc(e.body)+'</p>'
+           + '</article>';
+    }).join("");
+  }
+  function useFallback(){
+    var tpl = document.getElementById("jrFallback");
+    box.innerHTML = tpl ? tpl.innerHTML : '<p class="jr-status">Couldn\u2019t load the journal right now.</p>';
+  }
+  fetch(JOURNAL_URL)
+    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(list){ render(Array.isArray(list)?list:[]); })
+    .catch(function(err){ console.error("journal load failed:", err); useFallback(); });
+})();
+</script>
+
+<footer>
+  <div class="container">© <span id="yr"></span> Abhishek · Built from Delhi NCR · <a href="index.html#home">Back to top ↑</a></div>
+</footer>
+<script>
+function initReveal(){
+  var els=document.querySelectorAll(".reveal:not(.in)");
+  if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in");});return;}
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target);}});},{threshold:.12});
+  els.forEach(function(e){io.observe(e);});
+}
+initReveal();
+var burger=document.getElementById("burger"),links=document.getElementById("navLinks");
+if(burger){burger.addEventListener("click",function(){links.classList.toggle("open");});
+links.addEventListener("click",function(e){if(e.target.tagName==="A")links.classList.remove("open");});}
+var yr=document.getElementById("yr");if(yr)yr.textContent=new Date().getFullYear();
+var tg=document.getElementById("themeToggle");
+function setThemeIcon(){var d=document.documentElement.getAttribute("data-theme")==="dark";if(tg)tg.textContent=d?"☀️":"🌙";}
+setThemeIcon();
+if(tg)tg.addEventListener("click",function(){var d=document.documentElement.getAttribute("data-theme")==="dark";var n=d?"light":"dark";document.documentElement.setAttribute("data-theme",n);try{localStorage.setItem("theme",n);}catch(e){}setThemeIcon();});
+</script>
+</body></html>

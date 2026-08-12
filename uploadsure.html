@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UploadSure — Abhishek</title>
+<meta name="description" content="Browser tools that fix photos, signatures & PDFs to exact Indian form-upload specs.">
+<meta property="og:title" content="UploadSure — Abhishek">
+<meta property="og:description" content="Browser tools that fix photos, signatures & PDFs to exact Indian form-upload specs.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/og-cover.webp">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Edu+TAS+Beginner:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+</head>
+<body>
+<nav>
+  <div class="container nav-in">
+    <a href="/" class="brand"><img src="img/logo-mark.webp" alt="AbhishekIndia" class="brand-logo"></a>
+    <button class="burger" id="burger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html#about">About</a>
+      <a href="index.html#work">What I do</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="journal.html">Journal</a>
+      <a href="index.html#contact" class="nav-cta">Get in touch</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">🌙</button>
+    </div>
+    </div>
+  </div>
+</nav>
+<div class="pd-hero">
+  <div class="container">
+    <a href="index.html#projects" class="back-link">← All projects</a>
+    <div class="pd-hero-grid">
+      <div>
+        <div class="pd-cat">Utility tools</div>
+        <h1>UploadSure</h1>
+        <p class="pd-lead">Every Indian government form wants your photo at exactly 20 KB, or your signature at precise pixels. UploadSure makes files fit — in the browser, in seconds.</p>
+        <div class="pd-meta">
+          <span class="chip status live">Live</span>
+          <span class="chip">React · Vite · Client-side JS · PWA</span>
+        </div>
+        <div class="btns"><a href="https://www.uploadsure.in" target="_blank" rel="noopener" class="btn btn-primary">Visit UploadSure ↗</a></div>
+      </div>
+      <div><img src="img/uploadsure-hero.webp" alt="UploadSure screenshot" class="pd-hero-img" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'"></div>
+    </div>
+  </div>
+</div>
+
+<div class="pd-body">
+  <div class="container">
+    <div class="pd-cols">
+      <div class="reveal">
+        <h2>Overview</h2>
+        <p>Anyone who has filled an SSC, UPSC, IBPS, NEET or passport form knows the pain: the upload validator rejects your file because it's a few KB too big or the wrong dimensions. UploadSure fixes exactly that.</p>
+        <p>It's a growing suite of single-purpose tools — compress to an exact KB target, resize to exact pixels, convert formats, and a full set of PDF utilities — all running entirely in your browser, so your documents never leave your device.</p>
+        <h2>What it does</h2>
+        <ul><li>Compress images or PDFs to an exact KB target, with a live compression gauge</li><li>Resize to exact pixels — fill & crop, fit & pad, or stretch</li><li>10-tool PDF kit: merge, split, rotate, reorder, watermark, sign, and more</li><li>Smart Compress for automatic one-tap shrinking</li><li>Application packs for SSC, UPSC, IBPS/SBI, JEE, NEET, PAN, bank KYC & passport photos</li><li>Everything runs client-side — files stay private</li></ul>
+        
+      </div>
+      <aside>
+        <div class="spec reveal">
+          <h3>At a glance</h3>
+          <dl>
+            <dt>Category</dt><dd>Utility tools</dd>
+            <dt>Status</dt><dd>Live</dd>
+            <dt>Built with</dt><dd>React · Vite · Client-side JS · PWA</dd>
+            <dt>My role</dt><dd>Solo — product, engineering, design</dd>
+          </dl>
+          <a href="https://www.uploadsure.in" target="_blank" rel="noopener" class="btn btn-primary">Visit site ↗</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div class="pd-gallery">
+  <div class="container">
+    <div class="gal-grid reveal">
+      <img src="img/uploadsure-1.webp" alt="UploadSure screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+      <img src="img/uploadsure-2.webp" alt="UploadSure screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+      <img src="img/uploadsure-3.webp" alt="UploadSure screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+    </div>
+  </div>
+</div>
+
+<div class="pd-next">
+  <div class="container">
+    <div class="display">Next up: TaxSavingLab</div>
+    <div class="btns"><a href="taxsavinglab.html" class="btn btn-primary">See TaxSavingLab →</a> <a href="index.html#projects" class="btn btn-ghost" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.3)">All projects</a></div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">© <span id="yr"></span> Abhishek · Built from Delhi NCR · <a href="index.html#home">Back to top ↑</a></div>
+</footer>
+<script>
+function initReveal(){
+  var els=document.querySelectorAll(".reveal:not(.in)");
+  if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in");});return;}
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target);}});},{threshold:.12});
+  els.forEach(function(e){io.observe(e);});
+}
+initReveal();
+var burger=document.getElementById("burger"),links=document.getElementById("navLinks");
+if(burger){burger.addEventListener("click",function(){links.classList.toggle("open");});
+links.addEventListener("click",function(e){if(e.target.tagName==="A")links.classList.remove("open");});}
+var yr=document.getElementById("yr");if(yr)yr.textContent=new Date().getFullYear();
+var tg=document.getElementById("themeToggle");
+function setThemeIcon(){var d=document.documentElement.getAttribute("data-theme")==="dark";if(tg)tg.textContent=d?"☀️":"🌙";}
+setThemeIcon();
+if(tg)tg.addEventListener("click",function(){var d=document.documentElement.getAttribute("data-theme")==="dark";var n=d?"light":"dark";document.documentElement.setAttribute("data-theme",n);try{localStorage.setItem("theme",n);}catch(e){}setThemeIcon();});
+</script>
+</body></html>

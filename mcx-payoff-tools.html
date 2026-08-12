@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCX Payoff Tools — Abhishek</title>
+<meta name="description" content="Single-file options payoff analyzers for crude, gold, silver and USDINR.">
+<meta property="og:title" content="MCX Payoff Tools — Abhishek">
+<meta property="og:description" content="Single-file options payoff analyzers for crude, gold, silver and USDINR.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/og-cover.webp">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Edu+TAS+Beginner:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+</head>
+<body>
+<nav>
+  <div class="container nav-in">
+    <a href="/" class="brand"><img src="img/logo-mark.webp" alt="AbhishekIndia" class="brand-logo"></a>
+    <button class="burger" id="burger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html#about">About</a>
+      <a href="index.html#work">What I do</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="journal.html">Journal</a>
+      <a href="index.html#contact" class="nav-cta">Get in touch</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">🌙</button>
+    </div>
+  </div>
+</nav>
+<div class="pd-hero">
+  <div class="container">
+    <a href="index.html#projects" class="back-link">← All projects</a>
+    <div class="pd-hero-grid">
+      <div>
+        <div class="pd-cat">Trading tools</div>
+        <h1>MCX Payoff Tools</h1>
+        <p class="pd-lead">Small, fast, single-file calculators I built for my own trading — plot the payoff of any options or futures position before I take it.</p>
+        <div class="pd-meta">
+          <span class="chip status experiment">Experiment</span>
+          <span class="chip">HTML · JavaScript · Chart.js</span>
+        </div>
+        <div class="btns"><span class="chip">Not public yet</span></div>
+        <div class="btns" style="margin-top:14px"><a href="crude.html" class="btn btn-primary">Crude</a> <a href="gold.html" class="btn btn-ghost">Gold Mini</a> <a href="silver.html" class="btn btn-ghost">Silver Mini</a> <a href="usdinr.html" class="btn btn-ghost">USDINR</a></div>
+      </div>
+      <div><img src="img/mcx-payoff-tools-hero.webp" alt="MCX Payoff Tools screenshot" class="pd-hero-img" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'"></div>
+    </div>
+  </div>
+</div>
+
+<div class="pd-body">
+  <div class="container">
+    <div class="pd-cols">
+      <div class="reveal">
+        <h2>Overview</h2>
+        <p>Before entering an options position it helps to see the whole picture: max profit, max loss, breakevens and the shape of the payoff curve. These tools do exactly that for the contracts I trade.</p>
+        <p>Each instrument gets its own self-contained HTML file — crude, Gold Mini, Silver Mini and USDINR — with the correct lot sizes and strike steps baked in. They autosave locally and draw a live payoff curve.</p>
+        <h2>What it does</h2>
+        <ul><li>Options (CE/PE) and futures legs in one position</li><li>Exact max profit, max loss and breakevens</li><li>Live payoff curve with a risk beam</li><li>Correct contract specs per instrument (Gold Mini, Silver Mini, USDINR)</li><li>Single-file, offline, local autosave</li></ul>
+        <p style="font-size:13px;color:var(--body);margin-top:24px;border-top:1px solid var(--line);padding-top:16px">Note: this is a personal tool built for my own use and shared for educational purposes only. It is not investment advice, a recommendation, or a solicitation to trade. Markets carry risk; do your own research.</p>
+      </div>
+      <aside>
+        <div class="spec reveal">
+          <h3>At a glance</h3>
+          <dl>
+            <dt>Category</dt><dd>Trading tools</dd>
+            <dt>Status</dt><dd>Experiment</dd>
+            <dt>Built with</dt><dd>HTML · JavaScript · Chart.js</dd>
+            <dt>My role</dt><dd>Solo — personal trading tools</dd>
+          </dl>
+          
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div class="pd-gallery">
+  <div class="container">
+    <div class="gal-grid reveal">
+      <img src="img/mcx-1.webp" alt="MCX Payoff Tools screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+      <img src="img/mcx-2.webp" alt="MCX Payoff Tools screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+      <img src="img/mcx-3.webp" alt="MCX Payoff Tools screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+    </div>
+  </div>
+</div>
+
+<div class="pd-next">
+  <div class="container">
+    <div class="display">Next up: NearPop</div>
+    <div class="btns"><a href="nearpop.html" class="btn btn-primary">See NearPop →</a> <a href="index.html#projects" class="btn btn-ghost" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.3)">All projects</a></div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">© <span id="yr"></span> Abhishek · Built from Delhi NCR · <a href="index.html#home">Back to top ↑</a></div>
+</footer>
+<script>
+function initReveal(){
+  var els=document.querySelectorAll(".reveal:not(.in)");
+  if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in");});return;}
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target);}});},{threshold:.12});
+  els.forEach(function(e){io.observe(e);});
+}
+initReveal();
+var burger=document.getElementById("burger"),links=document.getElementById("navLinks");
+if(burger){burger.addEventListener("click",function(){links.classList.toggle("open");});
+links.addEventListener("click",function(e){if(e.target.tagName==="A")links.classList.remove("open");});}
+var yr=document.getElementById("yr");if(yr)yr.textContent=new Date().getFullYear();
+var tg=document.getElementById("themeToggle");
+function setThemeIcon(){var d=document.documentElement.getAttribute("data-theme")==="dark";if(tg)tg.textContent=d?"☀️":"🌙";}
+setThemeIcon();
+if(tg)tg.addEventListener("click",function(){var d=document.documentElement.getAttribute("data-theme")==="dark";var n=d?"light":"dark";document.documentElement.setAttribute("data-theme",n);try{localStorage.setItem("theme",n);}catch(e){}setThemeIcon();});
+</script>
+</body></html>

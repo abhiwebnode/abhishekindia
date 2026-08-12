@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daily Work Checklist</title>
+<meta name="theme-color" content="#16202C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#E9EDF1;
+    --card:#FFFFFF;
+    --ink:#16202C;
+    --muted:#6B7A8C;
+    --line:#D9E0E7;
+    --done:#9AA8B6;
+    --core:#2C3B4D;
+    --t0:#4F6B99;
+    --t1:#B8496F;
+    --t2:#6F4FA6;
+    --t3:#B5661C;
+    --t4:#0E7A6B;
+    --display:"Bricolage Grotesque",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg);color:var(--ink);font-family:var(--body);
+    font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;
+    padding:0 0 96px;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:0 14px}
+
+  /* ---------- header ---------- */
+  header{
+    background:var(--ink);color:#fff;padding:18px 0 16px;
+    border-radius:0 0 20px 20px;
+  }
+  .navrow{display:flex;align-items:center;gap:8px}
+  .navbtn{
+    flex:0 0 auto;width:38px;height:38px;border-radius:11px;border:1px solid rgba(255,255,255,.22);
+    background:rgba(255,255,255,.06);color:#fff;font-size:18px;line-height:1;cursor:pointer;
+  }
+  .navbtn:hover{background:rgba(255,255,255,.16)}
+  .datebox{flex:1 1 auto;text-align:center;min-width:0}
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:#9DB0C4;margin:0 0 2px;
+  }
+  .daynum{
+    font-family:var(--display);font-weight:800;font-size:30px;line-height:1.1;letter-spacing:-.02em;
+    margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .theme{
+    display:inline-block;margin-top:8px;padding:4px 11px;border-radius:999px;
+    background:rgba(255,255,255,.12);font-family:var(--mono);font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  }
+  .todaybtn{
+    margin-top:12px;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap
+  }
+  .ghost{
+    border:1px solid rgba(255,255,255,.24);background:transparent;color:#CFDCE8;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+    padding:6px 12px;border-radius:9px;cursor:pointer;
+  }
+  .ghost:hover{background:rgba(255,255,255,.12);color:#fff}
+  input[type=date]{
+    font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.08);color:#fff;
+    border:1px solid rgba(255,255,255,.24);border-radius:9px;padding:5px 9px;
+  }
+  input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.7}
+
+  /* ---------- week strip ---------- */
+  .week{display:flex;gap:6px;margin:16px 0 0}
+  .wd{
+    flex:1;text-align:center;padding:7px 2px 8px;border-radius:10px;
+    background:rgba(255,255,255,.06);border:1px solid transparent;cursor:pointer;
+  }
+  .wd .l{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:#9DB0C4}
+  .wd .n{font-family:var(--display);font-weight:600;font-size:14px;color:#E7EEF5}
+  .wd .ring{
+    width:100%;height:3px;border-radius:2px;background:rgba(255,255,255,.16);margin-top:5px;overflow:hidden
+  }
+  .wd .ring i{display:block;height:100%;background:#4FD1B5;width:0}
+  .wd.cur{background:#fff;border-color:#fff}
+  .wd.cur .l{color:#6B7A8C}
+  .wd.cur .n{color:var(--ink)}
+  .wd.cur .ring{background:#DDE4EA}
+
+  /* ---------- progress ---------- */
+  .prog{margin:16px 0 4px}
+  .progtop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .progtop b{font-family:var(--display);font-size:15px;font-weight:600}
+  .progtop span{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .bar{height:8px;border-radius:5px;background:#D6DEE6;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--t4);width:0;transition:width .25s ease}
+  .bar.full i{background:#0E7A6B}
+
+  /* ---------- cards ---------- */
+  section.card{
+    background:var(--card);border-radius:14px;margin:12px 0;padding:12px 14px 6px;
+    border:1px solid var(--line);border-left:4px solid var(--accent,var(--core));
+  }
+  .cardhead{
+    display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px
+  }
+  .cardhead h2{
+    margin:0;font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--accent,var(--core));
+  }
+  .count{font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+  label.item{
+    display:flex;gap:11px;align-items:flex-start;padding:9px 2px;cursor:pointer;
+    border-top:1px solid #EEF2F5;
+  }
+  .cardhead + label.item{border-top:none}
+  label.item input{
+    appearance:none;-webkit-appearance:none;flex:0 0 auto;margin:1px 0 0;
+    width:21px;height:21px;border:2px solid #C3CEDA;border-radius:6px;background:#fff;cursor:pointer;
+    position:relative;transition:background .12s,border-color .12s;
+  }
+  label.item input:checked{background:var(--accent,var(--core));border-color:var(--accent,var(--core))}
+  label.item input:checked::after{
+    content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;
+    border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(43deg)
+  }
+  label.item input:focus-visible{outline:3px solid #7FB2FF;outline-offset:2px}
+  label.item span{flex:1;font-size:15px}
+  label.item input:checked + span{color:var(--done);text-decoration:line-through}
+
+  textarea{
+    width:100%;min-height:70px;resize:vertical;border:1px solid var(--line);border-radius:10px;
+    padding:10px;font-family:var(--body);font-size:15px;color:var(--ink);background:#FBFCFD;margin-bottom:10px
+  }
+  textarea:focus{outline:2px solid #7FB2FF;outline-offset:1px}
+
+  /* ---------- footer actions ---------- */
+  .actions{display:flex;gap:8px;margin:18px 0 0;flex-wrap:wrap}
+  .btn{
+    flex:1 1 160px;padding:11px 14px;border-radius:11px;border:1px solid var(--line);
+    background:#fff;color:var(--ink);font-family:var(--mono);font-size:12px;letter-spacing:.07em;
+    text-transform:uppercase;font-weight:600;cursor:pointer;
+  }
+  .btn:hover{background:#F3F6F9}
+  .btn.warn{color:#A32B2B;border-color:#EBC9C9;background:#FFF7F7}
+  .btn.warn:hover{background:#FFEFEF}
+  .note{font-size:12.5px;color:var(--muted);margin:14px 0 0;text-align:center;line-height:1.5}
+
+  /* pending + ad-hoc */
+  section.card.pending{border-style:dashed;border-left-style:solid;background:#FFFDF6}
+  .dot{flex:0 0 auto;width:8px;height:8px;border-radius:50%;margin:7px 0 0}
+  .del{
+    flex:0 0 auto;border:none;background:none;color:#B6C0CB;font-size:19px;line-height:1;
+    padding:0 4px;cursor:pointer;border-radius:6px
+  }
+  .del:hover{color:#A32B2B;background:#FFF1F1}
+  .addrow{display:flex;gap:8px;padding:9px 2px;border-top:1px solid #EEF2F5}
+  .addrow input[type=text]{
+    flex:1;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:15px;
+    font-family:var(--body);color:var(--ink);background:#FBFCFD;min-width:0
+  }
+  .addrow input[type=text]:focus{outline:2px solid #7FB2FF;outline-offset:1px}
+  .addrow button{
+    flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:9px;padding:0 15px;
+    font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer
+  }
+  .addrow button:hover{background:#F3F6F9}
+  .empty{font-size:13px;color:var(--muted);padding:2px 2px 10px}
+  .toast{
+    position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(120%);
+    background:var(--ink);color:#fff;padding:11px 18px;border-radius:11px;font-size:14px;
+    box-shadow:0 8px 24px rgba(0,0,0,.22);transition:transform .25s ease;z-index:50;max-width:90vw
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (max-width:420px){
+    .daynum{font-size:26px}
+    label.item span{font-size:14.5px}
+  }
+
+  /* ---------- site quick-links ---------- */
+  .sites-section{margin:24px 0 0}
+  .sites-section h3{
+    font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 10px;
+  }
+  .site-card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    margin:8px 0;overflow:hidden;
+  }
+  .site-head{
+    display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;
+    border-bottom:1px solid transparent;transition:background .12s;
+  }
+  .site-head:hover{background:#F3F6F9}
+  .site-head.open{border-bottom-color:var(--line)}
+  .site-favicon{width:20px;height:20px;border-radius:4px;object-fit:contain;background:#EEF2F5;flex:0 0 auto}
+  .site-name{flex:1;font-weight:600;font-size:15px}
+  .site-host{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .site-arrow{font-size:13px;color:var(--muted);transition:transform .2s;flex:0 0 auto}
+  .site-head.open .site-arrow{transform:rotate(90deg)}
+  .site-visit{
+    flex:0 0 auto;font-family:var(--mono);font-size:11px;font-weight:600;
+    letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:8px;
+    background:var(--ink);color:#fff;text-decoration:none;
+  }
+  .site-visit:hover{background:#2C3B4D}
+  .site-body{display:none;padding:10px 14px 12px}
+  .site-body.open{display:block}
+  .site-links{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px}
+  .site-links:last-child{margin-bottom:0}
+  .link-chip{
+    display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:8px;
+    font-size:13px;text-decoration:none;border:1px solid var(--line);background:#FAFBFC;
+    color:var(--ink);transition:background .12s;white-space:nowrap;
+  }
+  .link-chip:hover{background:#EEF2F5}
+  .link-chip .icon{font-size:14px}
+  .chip-label{font-family:var(--mono);font-size:10px;color:var(--muted);margin-right:2px}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="navrow">
+      <button class="navbtn" id="prev" aria-label="Previous day">&#8249;</button>
+      <div class="datebox">
+        <p class="eyebrow" id="eyebrow">Monday &nbsp;<span id="syncbadge" style="font-size:10px;opacity:0;transition:opacity .3s"></span></p>
+        <h1 class="daynum" id="daynum">03 August 2026</h1>
+        <div><span class="theme" id="theme">PLAN &amp; RESEARCH</span></div>
+      </div>
+      <button class="navbtn" id="next" aria-label="Next day">&#8250;</button>
+    </div>
+    <div class="todaybtn">
+      <button class="ghost" id="todaybtn">Today</button>
+      <input type="date" id="picker" aria-label="Jump to date">
+    </div>
+    <div class="week" id="week"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="prog">
+    <div class="progtop"><b id="progtext">0 of 0 done</b><span id="progpct">0%</span></div>
+    <div class="bar" id="bar"><i></i></div>
+  </div>
+
+  <div id="pending"></div>
+  <div id="lists"></div>
+
+  <section class="card" style="--accent:#6B7A8C">
+    <div class="cardhead"><h2>Notes for the day</h2></div>
+    <textarea id="notes" placeholder="Anything worth remembering — merchant names, blockers, links."></textarea>
+  </section>
+
+  <div class="actions">
+    <button class="btn" id="clearday">Clear this day</button>
+    <button class="btn warn" id="clearall">Clear all saved days</button>
+  </div>
+  <p class="note" id="savednote"></p>
+
+  <div class="sites-section wrap">
+    <h3>My Sites &amp; Quick Links</h3>
+
+    <div class="site-card">
+      <div class="site-head" onclick="toggleSite(this)">
+        <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=couponboyz.com&sz=32" alt="">
+        <span class="site-name">CouponBoyz.com</span>
+        <span class="site-host">GoDaddy · MiniPC</span>
+        <a class="site-visit" href="https://www.couponboyz.com" target="_blank" onclick="event.stopPropagation()">Visit ↗</a>
+        <span class="site-arrow">›</span>
+      </div>
+      <div class="site-body">
+        <div class="site-links">
+          <a class="link-chip" href="mailto:abhishek@couponboyz.com"><span class="icon">✉</span><span class="chip-label">Zoho</span>abhishek@couponboyz.com</a>
+          <a class="link-chip" href="mailto:deals@couponboyz.com"><span class="icon">✉</span><span class="chip-label">Zoho</span>deals@couponboyz.com</a>
+          <a class="link-chip" href="mailto:support@couponboyz.com"><span class="icon">✉</span><span class="chip-label">Zoho</span>support@couponboyz.com</a>
+          <a class="link-chip" href="mailto:abhishek.couponboyz@gmail.com"><span class="icon">✉</span><span class="chip-label">Gmail</span>abhishek.couponboyz@gmail.com</a>
+        </div>
+        <div class="site-links">
+          <a class="link-chip" href="https://instagram.com/couponboyz" target="_blank"><span class="icon">📸</span>@couponboyz</a>
+          <a class="link-chip" href="https://x.com/couponboyz" target="_blank"><span class="icon">𝕏</span>@couponboyz</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-card">
+      <div class="site-head" onclick="toggleSite(this)">
+        <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=nearpop.in&sz=32" alt="">
+        <span class="site-name">NearPop.in</span>
+        <span class="site-host">BigRock · Firebase</span>
+        <a class="site-visit" href="https://www.nearpop.in" target="_blank" onclick="event.stopPropagation()">Visit ↗</a>
+        <span class="site-arrow">›</span>
+      </div>
+      <div class="site-body">
+        <div class="site-links">
+          <a class="link-chip" href="mailto:hello@nearpop.in"><span class="icon">✉</span><span class="chip-label">Zoho</span>hello@nearpop.in</a>
+          <a class="link-chip" href="mailto:abhishek@nearpop.in"><span class="icon">✉</span><span class="chip-label">Zoho</span>abhishek@nearpop.in</a>
+        </div>
+        <div class="site-links">
+          <a class="link-chip" href="https://instagram.com/nearpopindia" target="_blank"><span class="icon">📸</span>@nearpopindia</a>
+          <a class="link-chip" href="https://x.com/nearpopindia" target="_blank"><span class="icon">𝕏</span>@nearpopindia</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-card">
+      <div class="site-head" onclick="toggleSite(this)">
+        <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=taxsavinglab.com&sz=32" alt="">
+        <span class="site-name">TaxSavingLab.com</span>
+        <span class="site-host">BigRock · GitHub Pages</span>
+        <a class="site-visit" href="https://www.taxsavinglab.com" target="_blank" onclick="event.stopPropagation()">Visit ↗</a>
+        <span class="site-arrow">›</span>
+      </div>
+      <div class="site-body">
+        <div class="site-links">
+          <a class="link-chip" href="mailto:taxsaving@taxsavinglab.com"><span class="icon">✉</span><span class="chip-label">Zoho</span>taxsaving@taxsavinglab.com</a>
+          <a class="link-chip" href="mailto:taxsavinglab@gmail.com"><span class="icon">✉</span><span class="chip-label">Gmail</span>taxsavinglab@gmail.com</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-card">
+      <div class="site-head" onclick="toggleSite(this)">
+        <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=uploadsure.in&sz=32" alt="">
+        <span class="site-name">UploadSure.in</span>
+        <span class="site-host">Hostinger · GitHub Pages</span>
+        <a class="site-visit" href="https://www.uploadsure.in" target="_blank" onclick="event.stopPropagation()">Visit ↗</a>
+        <span class="site-arrow">›</span>
+      </div>
+      <div class="site-body">
+        <div class="site-links">
+          <a class="link-chip" href="mailto:info@uploadsure.in"><span class="icon">✉</span><span class="chip-label">Zoho</span>info@uploadsure.in</a>
+          <a class="link-chip" href="mailto:uploadsure@gmail.com"><span class="icon">✉</span><span class="chip-label">Gmail</span>uploadsure@gmail.com</a>
+        </div>
+        <div class="site-links">
+          <a class="link-chip" href="https://instagram.com/uploadsure" target="_blank"><span class="icon">📸</span>@uploadsure</a>
+          <a class="link-chip" href="https://x.com/uploadsure" target="_blank"><span class="icon">𝕏</span>@uploadsure</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-card">
+      <div class="site-head" onclick="toggleSite(this)">
+        <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=abhiwebnode.github.io&sz=32" alt="">
+        <span class="site-name">AbhishekIndia.com</span>
+        <span class="site-host">BigRock · GitHub Pages</span>
+        <a class="site-visit" href="https://abhiwebnode.github.io/abhishekindia/" target="_blank" onclick="event.stopPropagation()">Visit ↗</a>
+        <span class="site-arrow">›</span>
+      </div>
+      <div class="site-body">
+        <p style="font-size:13px;color:var(--muted);margin:2px 0">No emails or social handles configured yet.</p>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = {"months": {"August 2026": [{"date": "01 Aug", "dow": "Sat", "theme": "TECHNICAL & BACKUPS", "tracks": [["Quick Screening (15 min)"], ["NearPop: Instagram + X", "Schedule Sun/Mon posts"], [], ["Technical SEO pass: fix 404s, Core Web Vitals, schema", "Update NearPop Google Business Profile + local listings"], ["Onboard 2 merchants", "Log weekly merchant count vs 500 milestone", "BACKUPS: CouponBoyz WP backup + verify · confirm Firestore export · commit TaxSavingLab & UploadSure to Git"]]}, {"date": "02 Aug", "dow": "Sun", "theme": "REVIEW & PLAN", "tracks": [["Light Screening", "Clear anything left over"], ["Light: repost best performer, reply to comments/DMs"], [], ["Analytics review (GA4 + Search Console): top pages, traffic, what worked"], ["Weekly review: merchants added, product progress", "Plan next week"]]}, {"date": "03 Aug", "dow": "Mon", "theme": "PLAN & RESEARCH", "tracks": [["Full inbox Screening", "Reply to merchant-claim + affiliate + investor threads"], ["CouponBoyz: Instagram deal post + Telegram/WhatsApp deal blast"], ["Keyword research (Search Console 'Queries')", "Pick this week's topics for all 4 sites; fill content calendar"], ["Competitor scan — what ranked/posted this week", "Build the week's outreach list"], ["Outreach to 5 new merchants (WhatsApp/DM/visit)", "Screening app bugs"]]}, {"date": "04 Aug", "dow": "Tue", "theme": "WRITE — BATCH 1", "tracks": [["Quick Screening (15 min)", "Reply to anything urgent"], ["TaxSavingLab: X tip/thread + short LinkedIn post (both are gold here)"], ["Draft 1 CouponBoyz deal article + 1 TaxSavingLab guide"], ["Answer 2 Quora/Reddit questions (UploadSure/TaxSavingLab) — link the exact tool/page"], ["Onboard + list 2 merchants (photos, hours, category)"]]}, {"date": "05 Aug", "dow": "Wed", "theme": "WRITE — BATCH 2", "tracks": [["Quick Screening (15 min)"], ["UploadSure: 1 update post — pick ONE platform (Instagram OR X), keep it simple"], ["Write 1 UploadSure tool-query page + 1 NearPop local-discovery piece"], ["UploadSure SEO engine: answer 2 Reddit/Quora 'how to compress/resize' Qs → link the exact tool", "3 backlink emails"], ["Outreach to 5 merchants", "Follow up pending claim requests"]]}, {"date": "06 Aug", "dow": "Thu", "theme": "PUBLISH & LINK", "tracks": [["Quick Screening (15 min)"], ["NearPop: Instagram Reel (local spot / merchant spotlight) + X post"], ["Publish everything written Tue/Wed", "Add internal links across sites"], ["Submit new URLs in Search Console", "Share published posts to all channels"], ["Onboard + list 2 merchants", "Verify new listings show live in-app"]]}, {"date": "07 Aug", "dow": "Fri", "theme": "OUTREACH & NEWSLETTER", "tracks": [["Screening + reply", "Prep newsletter recipients"], ["CouponBoyz weekend-deals roundup (Instagram + Telegram/WhatsApp)", "TaxSavingLab LinkedIn thought-leadership post"], ["Light: refresh 1 old post's title/meta/CTR"], ["Send weekly email newsletter (top deals + tax tips)", "5 backlink/guest-post outreach emails"], ["Outreach to 5 merchants", "Draft short investor update if there's news"]]}, {"date": "08 Aug", "dow": "Sat", "theme": "TECHNICAL & BACKUPS", "tracks": [["Quick Screening (15 min)"], ["NearPop: Instagram + X", "Schedule Sun/Mon posts"], [], ["Technical SEO pass: fix 404s, Core Web Vitals, schema", "Update NearPop Google Business Profile + local listings"], ["Onboard 2 merchants", "Log weekly merchant count vs 500 milestone", "BACKUPS: CouponBoyz WP backup + verify · confirm Firestore export · commit TaxSavingLab & UploadSure to Git"]]}, {"date": "09 Aug", "dow": "Sun", "theme": "REVIEW & PLAN", "tracks": [["Light Screening", "Clear anything left over"], ["Light: repost best performer, reply to comments/DMs"], [], ["Analytics review (GA4 + Search Console): top pages, traffic, what worked"], ["Weekly review: merchants added, product progress", "Plan next week"]]}, {"date": "10 Aug", "dow": "Mon", "theme": "PLAN & RESEARCH", "tracks": [["Full inbox Screening", "Reply to merchant-claim + affiliate + investor threads"], ["CouponBoyz: Instagram deal post + Telegram/WhatsApp deal blast"], ["Keyword research (Search Console 'Queries')", "Pick this week's topics for all 4 sites; fill content calendar"], ["Competitor scan — what ranked/posted this week", "Build the week's outreach list"], ["Outreach to 5 new merchants (WhatsApp/DM/visit)", "Screening app bugs"]]}, {"date": "11 Aug", "dow": "Tue", "theme": "WRITE — BATCH 1", "tracks": [["Quick Screening (15 min)", "Reply to anything urgent"], ["TaxSavingLab: X tip/thread + short LinkedIn post (both are gold here)"], ["Draft 1 CouponBoyz deal article + 1 TaxSavingLab guide"], ["Answer 2 Quora/Reddit questions (UploadSure/TaxSavingLab) — link the exact tool/page"], ["Onboard + list 2 merchants (photos, hours, category)"]]}, {"date": "12 Aug", "dow": "Wed", "theme": "WRITE — BATCH 2", "tracks": [["Quick Screening (15 min)"], ["UploadSure: 1 update post — pick ONE platform (Instagram OR X), keep it simple"], ["Write 1 UploadSure tool-query page + 1 NearPop local-discovery piece"], ["UploadSure SEO engine: answer 2 Reddit/Quora 'how to compress/resize' Qs → link the exact tool", "3 backlink emails"], ["Outreach to 5 merchants", "Follow up pending claim requests"]]}, {"date": "13 Aug", "dow": "Thu", "theme": "PUBLISH & LINK", "tracks": [["Quick Screening (15 min)"], ["NearPop: Instagram Reel (local spot / merchant spotlight) + X post"], ["Publish everything written Tue/Wed", "Add internal links across sites"], ["Submit new URLs in Search Console", "Share published posts to all channels"], ["Onboard + list 2 merchants", "Verify new listings show live in-app"]]}, {"date": "14 Aug", "dow": "Fri", "theme": "OUTREACH & NEWSLETTER", "tracks": [["Screening + reply", "Prep newsletter recipients"], ["CouponBoyz weekend-deals roundup (Instagram + Telegram/WhatsApp)", "TaxSavingLab LinkedIn thought-leadership post"], ["Light: refresh 1 old post's title/meta/CTR"], ["Send weekly email newsletter (top deals + tax tips)", "5 backlink/guest-post outreach emails"], ["Outreach to 5 merchants", "Draft short investor update if there's news"]]}, {"date": "15 Aug", "dow": "Sat", "theme": "TECHNICAL & BACKUPS", "tracks": [["Quick Screening (15 min)"], ["NearPop: Instagram + X", "Schedule Sun/Mon posts"], [], ["Technical SEO pass: fix 404s, Core Web Vitals, schema", "Update NearPop Google Business Profile + local listings"], ["Onboard 2 merchants", "Log weekly merchant count vs 500 milestone", "BACKUPS: CouponBoyz WP backup + verify · confirm Firestore export · commit TaxSavingLab & UploadSure to Git"]]}, {"date": "16 Aug", "dow": "Sun", "theme": "REVIEW & PLAN", "tracks": [["Light Screening", "Clear anything left over"], ["Light: repost best performer, reply to comments/DMs"], [], ["Analytics review (GA4 + Search Console): top pages, traffic, what worked"], ["Weekly review: merchants added, product progress", "Plan next week"]]}, {"date": "17 Aug", "dow": "Mon", "theme": "PLAN & RESEARCH", "tracks": [["Full inbox Screening", "Reply to merchant-claim + affiliate + investor threads"], ["CouponBoyz: Instagram deal post + Telegram/WhatsApp deal blast"], ["Keyword research (Search Console 'Queries')", "Pick this week's topics for all 4 sites; fill content calendar"], ["Competitor scan — what ranked/posted this week", "Build the week's outreach list"], ["Outreach to 5 new merchants (WhatsApp/DM/visit)", "Screening app bugs"]]}, {"date": "18 Aug", "dow": "Tue", "theme": "WRITE — BATCH 1", "tracks": [["Quick Screening (15 min)", "Reply to anything urgent"], ["TaxSavingLab: X tip/thread + short LinkedIn post (both are gold here)"], ["Draft 1 CouponBoyz deal article + 1 TaxSavingLab guide"], ["Answer 2 Quora/Reddit questions (UploadSure/TaxSavingLab) — link the exact tool/page"], ["Onboard + list 2 merchants (photos, hours, category)"]]}, {"date": "19 Aug", "dow": "Wed", "theme": "WRITE — BATCH 2", "tracks": [["Quick Screening (15 min)"], ["UploadSure: 1 update post — pick ONE platform (Instagram OR X), keep it simple"], ["Write 1 UploadSure tool-query page + 1 NearPop local-discovery piece"], ["UploadSure SEO engine: answer 2 Reddit/Quora 'how to compress/resize' Qs → link the exact tool", "3 backlink emails"], ["Outreach to 5 merchants", "Follow up pending claim requests"]]}, {"date": "20 Aug", "dow": "Thu", "theme": "PUBLISH & LINK", "tracks": [["Quick Screening (15 min)"], ["NearPop: Instagram Reel (local spot / merchant spotlight) + X post"], ["Publish everything written Tue/Wed", "Add internal links across sites"], ["Submit new URLs in Search Console", "Share published posts to all channels"], ["Onboard + list 2 merchants", "Verify new listings show live in-app"]]}, {"date": "21 Aug", "dow": "Fri", "theme": "OUTREACH & NEWSLETTER", "tracks": [["Screening + reply", "Prep newsletter recipients"], ["CouponBoyz weekend-deals roundup (Instagram + Telegram/WhatsApp)", "TaxSavingLab LinkedIn thought-leadership post"], ["Light: refresh 1 old post's title/meta/CTR"], ["Send weekly email newsletter (top deals + tax tips)", "5 backlink/guest-post outreach emails"], ["Outreach to 5 merchants", "Draft short investor update if there's news"]]}, {"date": "22 Aug", "dow": "Sat", "theme": "TECHNICAL & BACKUPS", "tracks": [["Quick Screening (15 min)"], ["NearPop: Instagram + X", "Schedule Sun/Mon posts"], [], ["Technical SEO pass: fix 404s, Core Web Vitals, schema", "Update NearPop Google Business Profile + local listings"], ["Onboard 2 merchants", "Log weekly merchant count vs 500 milestone", "BACKUPS: CouponBoyz WP backup + verify · confirm Firestore export · commit TaxSavingLab & UploadSure to Git"]]}, {"date": "23 Aug", "dow": "Sun", "theme": "REVIEW & PLAN", "tracks": [["Light Screening", "Clear anything left over"], ["Light: repost best performer, reply to comments/DMs"], [], ["Analytics review (GA4 + Search Console): top pages, traffic, what worked"], ["Weekly review: merchants added, product progress", "Plan next week"]]}, {"date": "24 Aug", "dow": "Mon", "theme": "PLAN & RESEARCH", "tracks": [["Full inbox Screening", "Reply to merchant-claim + affiliate + investor threads"], ["CouponBoyz: Instagram deal post + Telegram/WhatsApp deal blast"], ["Keyword research (Search Console 'Queries')", "Pick this week's topics for all 4 sites; fill content calendar"], ["Competitor scan — what ranked/posted this week", "Build the week's outreach list"], ["Outreach to 5 new merchants (WhatsApp/DM/visit)", "Screening app bugs"]]}, {"date": "25 Aug", "dow": "Tue", "theme": "WRITE — BATCH 1", "tracks": [["Quick Screening (15 min)", "Reply to anything urgent"], ["TaxSavingLab: X tip/thread + short LinkedIn post (both are gold here)"], ["Draft 1 CouponBoyz deal article + 1 TaxSavingLab guide"], ["Answer 2 Quora/Reddit questions (UploadSure/TaxSavingLab) — link the exact tool/page"], ["Onboard + list 2 merchants (photos, hours, category)"]]}, {"date": "26 Aug", "dow": "Wed", "theme": "WRITE — BATCH 2", "tracks": [["Quick Screening (15 min)"], ["UploadSure: 1 update post — pick ONE platform (Instagram OR X), keep it simple"], ["Write 1 UploadSure tool-query page + 1 NearPop local-discovery piece"], ["UploadSure SEO engine: answer 2 Reddit/Quora 'how to compress/resize' Qs → link the exact tool", "3 backlink emails"], ["Outreach to 5 merchants", "Follow up pending claim requests"]]}, {"date": "27 Aug", "dow": "Thu", "theme": "PUBLISH & LINK", "tracks": [["Quick Screening (15 min)"], ["NearPop: Instagram Reel (local spot / merchant spotlight) + X post"], ["Publish everything written Tue/Wed", "Add internal links across sites"], ["Submit new URLs in Search Console", "Share published posts to all channels"], ["Onboard + list 2 merchants", "Verify new listings show live in-app"]]}, {"date": "28 Aug", "dow": "Fri", "theme": "OUTREACH & NEWSLETTER", "tracks": [["Screening + reply", "Prep newsletter recipients"], ["CouponBoyz weekend-deals roundup (Instagram + Telegram/WhatsApp)", "TaxSavingLab LinkedIn thought-leadership post"], ["Light: refresh 1 old post's title/meta/CTR"], ["Send weekly email newsletter (top deals + tax tips)", "5 backlink/guest-post outreach emails"], ["Outreach to 5 merchants", "Draft short investor update if there's news"]]}, {"date": "29 Aug", "dow": "Sat", "theme": "TECHNICAL & BACKUPS", "tracks": [["Quick Screening (15 min)"], ["NearPop: Instagram + X", "Schedule Sun/Mon posts"], [], ["Technical SEO pass: fix 404s, Core Web Vitals, schema", "Update NearPop Google Business Profile + local listings"], ["Onboard 2 merchants", "Log weekly merchant count vs 500 milestone", "BACKUPS: CouponBoyz WP backup + verify · confirm Firestore export · commit TaxSavingLab & UploadSure to Git"]]}, {"date": "30 Aug", "dow": "Sun", "theme": "MONTHLY REVIEW", "tracks": [["Light Screening", "Clear anything left over"], ["Light: repost best performer, reply to comments/DMs"], [], ["MONTH-END: full analytics review, backup restore-test (1 site), refresh top pages, plan next 30 days"], ["Weekly review: merchants added, product progress", "Plan next week", "Tally merchants added this month"]]}], "September 2026": [{"date": "01 Sep", "dow": "Tue", "theme": "WRITE — BATCH 1", "tracks": [["Quick triage (15 min)", "Reply to anything urgent"], ["TaxSavingLab: X tip/thread + short LinkedIn post (both are gold here)"], ["Draft 1 CouponBoyz deal article + 1 TaxSavingLab guide"], ["Answer 2 Quora/Reddit questions (UploadSure/TaxSavingLab) — link the exact tool/page"], ["Onboard + list 2 merchants (photos, hours, category)"]]}, {"date": "02 Sep", "dow": "Wed", "theme": "WRITE — BATCH 2", "tracks": [["Quick triage (15 min)"], ["UploadSure: 1 update post — pick ONE platform (Instagram OR X), keep it simple"], ["Write 1 UploadSure tool-query page + 1 NearPop local-discovery piece"], ["UploadSure SEO engine: answer 2 Reddit/Quora 'how to compress/resize' Qs → link the exact tool", "3 backlink emails"], ["Outreach to 5 merchants", "Follow up pending claim requests"]]}, {"date": "03 Sep", "dow": "Thu", "theme": "PUBLISH & LINK", "tracks": [["Quick triage (15 min)"], ["NearPop: Instagram Reel (local spot / merchant spotlight) + X post"], ["Publish everything written Tue/Wed", "Add internal links across sites"], ["Submit new URLs in Search Console", "Share published posts to all channels"], ["Onboard + list 2 merchants", "Verify new listings show live in-app"]]}, {"date": "04 Sep", "dow": "Fri", "theme": "OUTREACH & NEWSLETTER", "tracks": [["Triage + reply", "Prep newsletter recipients"], ["CouponBoyz weekend-deals roundup (Instagram + Telegram/WhatsApp)", "TaxSavingLab LinkedIn thought-leadership post"], ["Light: refresh 1 old post's title/meta/CTR"], ["Send weekly email newsletter (top deals + tax tips)", "5 backlink/guest-post outreach emails"], ["Outreach to 5 merchants", "Draft short investor update if there's news"]]}, {"date": "05 Sep", "dow": "Sat", "theme": "TECHNICAL & BACKUPS", "tracks": [["Quick triage (15 min)"], ["NearPop: Instagram + X", "Schedule Sun/Mon posts"], [], ["Technical SEO pass: fix 404s, Core Web Vitals, schema", "Update NearPop Google Business Profile + local listings"], ["Onboard 2 merchants", "Log weekly merchant count vs 500 milestone", "BACKUPS: CouponBoyz WP backup + verify · confirm Firestore export · commit TaxSavingLab & UploadSure to Git"]]}, {"date": "06 Sep", "dow": "Sun", "theme": "REVIEW & PLAN", "tracks": [["Light triage", "Clear anything left over"], ["Light: repost best performer, reply to comments/DMs"], [], ["Analytics review (GA4 + Search Console): top pages, traffic, what worked"], ["Weekly review: merchants added, product progress", "Plan next week"]]}, {"date": "07 Sep", "dow": "Mon", "theme": "PLAN & RESEARCH", "tracks": [["Full inbox triage", "Reply to merchant-claim + affiliate + investor threads"], ["CouponBoyz: Instagram deal post + Telegram/WhatsApp deal blast"], ["Keyword research (Search Console 'Queries')", "Pick this week's topics for all 4 sites; fill content calendar"], ["Competitor scan — what ranked/posted this week", "Build the week's outreach list"], ["Outreach to 5 new merchants (WhatsApp/DM/visit)", "Triage app bugs"]]}, {"date": "08 Sep", "dow": "Tue", "theme": "WRITE — BATCH 1", "tracks": [["Quick triage (15 min)", "Reply to anything urgent"], ["TaxSavingLab: X tip/thread + short LinkedIn post (both are gold here)"], ["Draft 1 CouponBoyz deal article + 1 TaxSavingLab guide"], ["Answer 2 Quora/Reddit questions (UploadSure/TaxSavingLab) — link the exact tool/page"], ["Onboard + list 2 merchants (photos, hours, category)"]]}, {"date": "09 Sep", "dow": "Wed", "theme": "WRITE — BATCH 2", "tracks": [["Quick triage (15 min)"], ["UploadSure: 1 update post — pick ONE platform (Instagram OR X), keep it simple"], ["Write 1 UploadSure tool-query page + 1 NearPop local-discovery piece"], ["UploadSure SEO engine: answer 2 Reddit/Quora 'how to compress/resize' Qs → link the exact tool", "3 backlink emails"], ["Outreach to 5 merchants", "Follow up pending claim requests"]]}, {"date": "10 Sep", "dow": "Thu", "theme": "PUBLISH & LINK", "tracks": [["Quick triage (15 min)"], ["NearPop: Instagram Reel (local spot / merchant spotlight) + X post"], ["Publish everything written Tue/Wed", "Add internal links across sites"], ["Submit new URLs in Search Console", "Share published posts to all channels"], ["Onboard + list 2 merchants", "Verify new listings show live in-app"]]}, {"date": "11 Sep", "dow": "Fri", "theme": "OUTREACH & NEWSLETTER", "tracks": [["Triage + reply", "Prep newsletter recipients"], ["CouponBoyz weekend-deals roundup (Instagram + Telegram/WhatsApp)", "TaxSavingLab LinkedIn thought-leadership post"], ["Light: refresh 1 old post's title/meta/CTR"], ["Send weekly email newsletter (top deals + tax tips)", "5 backlink/guest-post outreach emails"], ["Outreach to 5 merchants", "Draft short investor update if there's news"]]}, {"date": "12 Sep", "dow": "Sat", "theme": "TECHNICAL & BACKUPS", "tracks": [["Quick triage (15 min)"], ["NearPop: Instagram + X", "Schedule Sun/Mon posts"], [], ["Technical SEO pass: fix 404s, Core Web Vitals, schema", "Update NearPop Google Business Profile + local listings"], ["Onboard 2 merchants", "Log weekly merchant count vs 500 milestone", "BACKUPS: CouponBoyz WP backup + verify · confirm Firestore export · commit TaxSavingLab & UploadSure to Git"]]}, {"date": "13 Sep", "dow": "Sun", "theme": "REVIEW & PLAN", "tracks": [["Light triage", "Clear anything left over"], ["Light: repost best performer, reply to comments/DMs"], [], ["Analytics review (GA4 + Search Console): top pages, traffic, what worked"], ["Weekly review: merchants added, product progress", "Plan next week"]]}, {"date": "14 Sep", "dow": "Mon", "theme": "PLAN & RESEARCH", "tracks": [["Full inbox triage", "Reply to merchant-claim + affiliate + investor threads"], ["CouponBoyz: Instagram deal post + Telegram/WhatsApp deal blast"], ["Keyword research (Search Console 'Queries')", "Pick this week's topics for all 4 sites; fill content calendar"], ["Competitor scan — what ranked/posted this week", "Build the week's outreach list"], ["Outreach to 5 new merchants (WhatsApp/DM/visit)", "Triage app bugs"]]}, {"date": "15 Sep", "dow": "Tue", "theme": "WRITE — BATCH 1", "tracks": [["Quick triage (15 min)", "Reply to anything urgent"], ["TaxSavingLab: X tip/thread + short LinkedIn post (both are gold here)"], ["Draft 1 CouponBoyz deal article + 1 TaxSavingLab guide"], ["Answer 2 Quora/Reddit questions (UploadSure/TaxSavingLab) — link the exact tool/page"], ["Onboard + list 2 merchants (photos, hours, category)"]]}, {"date": "16 Sep", "dow": "Wed", "theme": "WRITE — BATCH 2", "tracks": [["Quick triage (15 min)"], ["UploadSure: 1 update post — pick ONE platform (Instagram OR X), keep it simple"], ["Write 1 UploadSure tool-query page + 1 NearPop local-discovery piece"], ["UploadSure SEO engine: answer 2 Reddit/Quora 'how to compress/resize' Qs → link the exact tool", "3 backlink emails"], ["Outreach to 5 merchants", "Follow up pending claim requests"]]}, {"date": "17 Sep", "dow": "Thu", "theme": "PUBLISH & LINK", "tracks": [["Quick triage (15 min)"], ["NearPop: Instagram Reel (local spot / merchant spotlight) + X post"], ["Publish everything written Tue/Wed", "Add internal links across sites"], ["Submit new URLs in Search Console", "Share published posts to all channels"], ["Onboard + list 2 merchants", "Verify new listings show live in-app"]]}, {"date": "18 Sep", "dow": "Fri", "theme": "OUTREACH & NEWSLETTER", "tracks": [["Triage + reply", "Prep newsletter recipients"], ["CouponBoyz weekend-deals roundup (Instagram + Telegram/WhatsApp)", "TaxSavingLab LinkedIn thought-leadership post"], ["Light: refresh 1 old post's title/meta/CTR"], ["Send weekly email newsletter (top deals + tax tips)", "5 backlink/guest-post outreach emails"], ["Outreach to 5 merchants", "Draft short investor update if there's news"]]}, {"date": "19 Sep", "dow": "Sat", "theme": "TECHNICAL & BACKUPS", "tracks": [["Quick triage (15 min)"], ["NearPop: Instagram + X", "Schedule Sun/Mon posts"], [], ["Technical SEO pass: fix 404s, Core Web Vitals, schema", "Update NearPop Google Business Profile + local listings"], ["Onboard 2 merchants", "Log weekly merchant count vs 500 milestone", "BACKUPS: CouponBoyz WP backup + verify · confirm Firestore export · commit TaxSavingLab & UploadSure to Git"]]}, {"date": "20 Sep", "dow": "Sun", "theme": "REVIEW & PLAN", "tracks": [["Light triage", "Clear anything left over"], ["Light: repost best performer, reply to comments/DMs"], [], ["Analytics review (GA4 + Search Console): top pages, traffic, what worked"], ["Weekly review: merchants added, product progress", "Plan next week"]]}, {"date": "21 Sep", "dow": "Mon", "theme": "PLAN & RESEARCH", "tracks": [["Full inbox triage", "Reply to merchant-claim + affiliate + investor threads"], ["CouponBoyz: Instagram deal post + Telegram/WhatsApp deal blast"], ["Keyword research (Search Console 'Queries')", "Pick this week's topics for all 4 sites; fill content calendar"], ["Competitor scan — what ranked/posted this week", "Build the week's outreach list"], ["Outreach to 5 new merchants (WhatsApp/DM/visit)", "Triage app bugs"]]}, {"date": "22 Sep", "dow": "Tue", "theme": "WRITE — BATCH 1", "tracks": [["Quick triage (15 min)", "Reply to anything urgent"], ["TaxSavingLab: X tip/thread + short LinkedIn post (both are gold here)"], ["Draft 1 CouponBoyz deal article + 1 TaxSavingLab guide"], ["Answer 2 Quora/Reddit questions (UploadSure/TaxSavingLab) — link the exact tool/page"], ["Onboard + list 2 merchants (photos, hours, category)"]]}, {"date": "23 Sep", "dow": "Wed", "theme": "WRITE — BATCH 2", "tracks": [["Quick triage (15 min)"], ["UploadSure: 1 update post — pick ONE platform (Instagram OR X), keep it simple"], ["Write 1 UploadSure tool-query page + 1 NearPop local-discovery piece"], ["UploadSure SEO engine: answer 2 Reddit/Quora 'how to compress/resize' Qs → link the exact tool", "3 backlink emails"], ["Outreach to 5 merchants", "Follow up pending claim requests"]]}, {"date": "24 Sep", "dow": "Thu", "theme": "PUBLISH & LINK", "tracks": [["Quick triage (15 min)"], ["NearPop: Instagram Reel (local spot / merchant spotlight) + X post"], ["Publish everything written Tue/Wed", "Add internal links across sites"], ["Submit new URLs in Search Console", "Share published posts to all channels"], ["Onboard + list 2 merchants", "Verify new listings show live in-app"]]}, {"date": "25 Sep", "dow": "Fri", "theme": "OUTREACH & NEWSLETTER", "tracks": [["Triage + reply", "Prep newsletter recipients"], ["CouponBoyz weekend-deals roundup (Instagram + Telegram/WhatsApp)", "TaxSavingLab LinkedIn thought-leadership post"], ["Light: refresh 1 old post's title/meta/CTR"], ["Send weekly email newsletter (top deals + tax tips)", "5 backlink/guest-post outreach emails"], ["Outreach to 5 merchants", "Draft short investor update if there's news"]]}, {"date": "26 Sep", "dow": "Sat", "theme": "TECHNICAL & BACKUPS", "tracks": [["Quick triage (15 min)"], ["NearPop: Instagram + X", "Schedule Sun/Mon posts"], [], ["Technical SEO pass: fix 404s, Core Web Vitals, schema", "Update NearPop Google Business Profile + local listings"], ["Onboard 2 merchants", "Log weekly merchant count vs 500 milestone", "BACKUPS: CouponBoyz WP backup + verify · confirm Firestore export · commit TaxSavingLab & UploadSure to Git"]]}, {"date": "27 Sep", "dow": "Sun", "theme": "REVIEW & PLAN", "tracks": [["Light triage", "Clear anything left over"], ["Light: repost best performer, reply to comments/DMs"], [], ["Analytics review (GA4 + Search Console): top pages, traffic, what worked"], ["Weekly review: merchants added, product progress", "Plan next week"]]}, {"date": "28 Sep", "dow": "Mon", "theme": "PLAN & RESEARCH", "tracks": [["Full inbox triage", "Reply to merchant-claim + affiliate + investor threads"], ["CouponBoyz: Instagram deal post + Telegram/WhatsApp deal blast"], ["Keyword research (Search Console 'Queries')", "Pick this week's topics for all 4 sites; fill content calendar"], ["Competitor scan — what ranked/posted this week", "Build the week's outreach list"], ["Outreach to 5 new merchants (WhatsApp/DM/visit)", "Triage app bugs"]]}, {"date": "29 Sep", "dow": "Tue", "theme": "WRITE — BATCH 1", "tracks": [["Quick triage (15 min)", "Reply to anything urgent"], ["TaxSavingLab: X tip/thread + short LinkedIn post (both are gold here)"], ["Draft 1 CouponBoyz deal article + 1 TaxSavingLab guide"], ["Answer 2 Quora/Reddit questions (UploadSure/TaxSavingLab) — link the exact tool/page"], ["Onboard + list 2 merchants (photos, hours, category)"]]}, {"date": "30 Sep", "dow": "Wed", "theme": "MONTHLY REVIEW", "tracks": [["Quick triage (15 min)"], ["UploadSure: 1 update post — pick ONE platform (Instagram OR X), keep it simple"], ["Write 1 UploadSure tool-query page + 1 NearPop local-discovery piece"], ["MONTH-END: full analytics review, backup restore-test (1 site), refresh top pages, plan next 30 days"], ["Outreach to 5 merchants", "Follow up pending claim requests", "Tally merchants added this month"]]}]}, "week": {"Mon": {"theme": "PLAN & RESEARCH", "tracks": [["Full inbox Screening", "Reply to merchant-claim + affiliate + investor threads"], ["CouponBoyz: Instagram deal post + Telegram/WhatsApp deal blast"], ["Keyword research (Search Console 'Queries')", "Pick this week's topics for all 4 sites; fill content calendar"], ["Competitor scan — what ranked/posted this week", "Build the week's outreach list"], ["Outreach to 5 new merchants (WhatsApp/DM/visit)", "Screening app bugs"]]}, "Tue": {"theme": "WRITE — BATCH 1", "tracks": [["Quick Screening (15 min)", "Reply to anything urgent"], ["TaxSavingLab: X tip/thread + short LinkedIn post (both are gold here)"], ["Draft 1 CouponBoyz deal article + 1 TaxSavingLab guide"], ["Answer 2 Quora/Reddit questions (UploadSure/TaxSavingLab) — link the exact tool/page"], ["Onboard + list 2 merchants (photos, hours, category)"]]}, "Wed": {"theme": "WRITE — BATCH 2", "tracks": [["Quick Screening (15 min)"], ["UploadSure: 1 update post — pick ONE platform (Instagram OR X), keep it simple"], ["Write 1 UploadSure tool-query page + 1 NearPop local-discovery piece"], ["UploadSure SEO engine: answer 2 Reddit/Quora 'how to compress/resize' Qs → link the exact tool", "3 backlink emails"], ["Outreach to 5 merchants", "Follow up pending claim requests"]]}, "Thu": {"theme": "PUBLISH & LINK", "tracks": [["Quick Screening (15 min)"], ["NearPop: Instagram Reel (local spot / merchant spotlight) + X post"], ["Publish everything written Tue/Wed", "Add internal links across sites"], ["Submit new URLs in Search Console", "Share published posts to all channels"], ["Onboard + list 2 merchants", "Verify new listings show live in-app"]]}, "Fri": {"theme": "OUTREACH & NEWSLETTER", "tracks": [["Screening + reply", "Prep newsletter recipients"], ["CouponBoyz weekend-deals roundup (Instagram + Telegram/WhatsApp)", "TaxSavingLab LinkedIn thought-leadership post"], ["Light: refresh 1 old post's title/meta/CTR"], ["Send weekly email newsletter (top deals + tax tips)", "5 backlink/guest-post outreach emails"], ["Outreach to 5 merchants", "Draft short investor update if there's news"]]}, "Sat": {"theme": "TECHNICAL & BACKUPS", "tracks": [["Quick Screening (15 min)"], ["NearPop: Instagram + X", "Schedule Sun/Mon posts"], [], ["Technical SEO pass: fix 404s, Core Web Vitals, schema", "Update NearPop Google Business Profile + local listings"], ["Onboard 2 merchants", "Log weekly merchant count vs 500 milestone", "BACKUPS: CouponBoyz WP backup + verify · confirm Firestore export · commit TaxSavingLab & UploadSure to Git"]]}, "Sun": {"theme": "REVIEW & PLAN", "tracks": [["Light Screening", "Clear anything left over"], ["Light: repost best performer, reply to comments/DMs"], [], ["Analytics review (GA4 + Search Console): top pages, traffic, what worked"], ["Weekly review: merchants added, product progress", "Plan next week"]]}}};
+const TRACKS = [
+  {name:"Email &amp; Admin", color:"var(--t0)"},
+  {name:"Social Post",       color:"var(--t1)"},
+  {name:"Blog / Content",    color:"var(--t2)"},
+  {name:"Marketing / SEO",   color:"var(--t3)"},
+  {name:"NearPop",           color:"var(--t4)"}
+];
+const CORE = [
+  "Check email",
+  "Confirm CouponBoyz deal drops auto-posted + all sites up",
+  "Post/schedule today's social",
+  "NearPop merchant action (target ~12 new merchants/week)"
+];
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const DOWFULL = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const KEY = "website-work-checklist-v1";
+function setStatus(st){
+  const b=document.getElementById("syncbadge");if(!b)return;
+  if(st==="syncing"){b.textContent="⟳ syncing";b.style.opacity="1";b.style.color="#9DB0C4";}
+  else{b.textContent="✓ saved";b.style.color="#4FD1B5";b.style.opacity="1";
+    clearTimeout(b._t);b._t=setTimeout(()=>b.style.opacity="0",1800);}
+}
+
+/* ---------- storage (Google Sheets — JSONP to avoid CORS) ---------- */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTYG6LTRzm4IaI1Zokd6bSwpswSsGeAX1Ckbp-cSQ4yagfT3m7RdXAY6dD5EfrveehhQ/exec";
+let store = {};
+let saveTimers = {};
+
+// JSONP call — works from any origin including GitHub Pages
+function jsonp(url){
+  return new Promise((resolve) => {
+    const cb = "cb" + Math.random().toString(36).slice(2);
+    const s = document.createElement("script");
+    window[cb] = (data) => { resolve(data); delete window[cb]; s.remove(); };
+    s.onerror = () => { resolve(null); delete window[cb]; s.remove(); };
+    s.src = url + (url.includes("?") ? "&" : "?") + "callback=" + cb;
+    document.head.appendChild(s);
+  });
+}
+
+async function sheetGet(date){
+  try{ return await jsonp(SCRIPT_URL+"?action=get&date="+date); }catch(e){return null;}
+}
+async function sheetSet(date,data){
+  // encode payload as base64 in a GET param — avoids POST CORS preflight
+  try{
+    const payload = btoa(unescape(encodeURIComponent(JSON.stringify({action:"set",date,data}))));
+    await jsonp(SCRIPT_URL+"?action=post&payload="+encodeURIComponent(payload));
+  }catch(e){}
+}
+async function sheetDelete(date){
+  try{
+    const payload = btoa(unescape(encodeURIComponent(JSON.stringify({action:"delete",date}))));
+    await jsonp(SCRIPT_URL+"?action=post&payload="+encodeURIComponent(payload));
+  }catch(e){}
+}
+async function sheetClearAll(){
+  try{
+    const payload = btoa(unescape(encodeURIComponent(JSON.stringify({action:"clearAll"}))));
+    await jsonp(SCRIPT_URL+"?action=post&payload="+encodeURIComponent(payload));
+  }catch(e){}
+}
+async function sheetGetAll(){
+  try{ return await jsonp(SCRIPT_URL+"?action=getAll") || {}; }catch(e){return {};}
+}
+function saveStore(storeObj,dateKey){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)){
+    console.warn("saveStore: bad dateKey rejected:", dateKey); return;
+  }
+  if(saveTimers[dateKey]) clearTimeout(saveTimers[dateKey]);
+  saveTimers[dateKey]=setTimeout(async()=>{
+    const data=storeObj[dateKey];
+    if(data){ setStatus("syncing"); await sheetSet(dateKey,data); setStatus("ready"); }
+    delete saveTimers[dateKey];
+  },800);
+}
+
+/* ---------- date helpers ---------- */
+function iso(d){
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function fromIso(s){ const p = s.split("-").map(Number); return new Date(p[0],p[1]-1,p[2]); }
+let current = new Date(); current.setHours(0,0,0,0);
+
+/* ---------- plan lookup ---------- */
+function planFor(d){
+  const sheet = MONTHS[d.getMonth()] + " " + d.getFullYear();
+  const label = String(d.getDate()).padStart(2,"0") + " " + MONTHS[d.getMonth()].slice(0,3);
+  const rows = DATA.months[sheet];
+  if(rows){
+    const hit = rows.find(r => r.date === label);
+    if(hit) return {theme:hit.theme, tracks:hit.tracks, exact:true};
+  }
+  const fb = DATA.week[DOW[d.getDay()]];
+  return {theme:fb.theme, tracks:fb.tracks, exact:false};
+}
+
+/* ---------- day state ---------- */
+function dayState(key){          // read-only view
+  const d = store[key];
+  if(!d) return {checked:{}, notes:""};
+  if(!d.checked) d.checked = {};
+  return d;
+}
+function ensureDay(key){         // create on first write only
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(key)){ console.warn("ensureDay: bad key", key); return {checked:{},notes:""}; }
+  if(!store[key]) store[key] = {checked:{}, notes:""};
+  if(!store[key].checked) store[key].checked = {};
+  return store[key];
+}
+function dayProgress(key, plan){
+  const st = store[key];
+  let total = CORE.length;
+  plan.tracks.forEach(t => total += t.length);
+  if(!st) return {done:0,total:total};
+  const extra = st.extra || [];
+  total += extra.length;
+  let done = 0;
+  for(const k in st.checked){ if(st.checked[k]) done++; }
+  extra.forEach(e => { if(e.done) done++; });
+  return {done: Math.min(done,total), total: total};
+}
+
+/* ---------- render ---------- */
+async function render(){
+  const key = iso(current);
+  const plan = planFor(current);
+  // day data loaded by boot sync; only fetch individually if navigating to an uncached day
+  if(!store[key] && document.readyState === "complete"){
+    setStatus("syncing");
+    const remote=await sheetGet(key);
+    if(remote) store[key]=remote;
+    setStatus("ready");
+  }
+  const st = dayState(key);
+
+  document.getElementById("eyebrow").textContent =
+    DOWFULL[current.getDay()] + (plan.exact ? "" : " · weekly rhythm");
+  document.getElementById("daynum").textContent =
+    String(current.getDate()).padStart(2,"0") + " " + MONTHS[current.getMonth()] + " " + current.getFullYear();
+  document.getElementById("theme").textContent = plan.theme;
+  document.getElementById("picker").value = key;
+
+  buildPending();
+
+  const lists = document.getElementById("lists");
+  lists.innerHTML = "";
+  lists.appendChild(buildCard("Daily core", "var(--core)", CORE, "core", key));
+  plan.tracks.forEach((items, i) => {
+    if(!items.length) return;
+    lists.appendChild(buildCard(TRACKS[i].name, TRACKS[i].color, items, "t"+i, key));
+  });
+  lists.appendChild(buildExtras(key));
+
+  const notes = document.getElementById("notes");
+  notes.value = st.notes || "";
+
+  updateProgress();
+  buildWeek();
+  document.getElementById("savednote").innerHTML = "Ticks sync to Google Sheets — shared across all devices. Saved days: "+Object.keys(store).length+".";
+}
+
+function buildCard(title, color, items, prefix, key){
+  const st = dayState(key);
+  const sec = document.createElement("section");
+  sec.className = "card";
+  sec.style.setProperty("--accent", color);
+  const head = document.createElement("div");
+  head.className = "cardhead";
+  const h = document.createElement("h2");
+  h.innerHTML = title;
+  const c = document.createElement("span");
+  c.className = "count";
+  head.appendChild(h); head.appendChild(c);
+  sec.appendChild(head);
+
+  items.forEach((text, i) => {
+    const id = prefix + "-" + i;
+    const lab = document.createElement("label");
+    lab.className = "item";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = !!st.checked[id];
+    cb.addEventListener("change", () => {
+      const s = ensureDay(iso(current));
+      if(cb.checked) s.checked[id] = 1; else delete s.checked[id];
+      saveStore(store, iso(current));
+      updateProgress(); refreshCounts(); buildWeek();
+    });
+    const sp = document.createElement("span");
+    sp.textContent = text;
+    lab.appendChild(cb); lab.appendChild(sp);
+    sec.appendChild(lab);
+  });
+  sec.dataset.total = items.length;
+  return sec;
+}
+
+/* ---------- extra (ad-hoc) tasks for a day ---------- */
+function buildExtras(key){
+  const st = dayState(key);
+  const extra = st.extra || [];
+  const sec = document.createElement("section");
+  sec.className = "card";
+  sec.style.setProperty("--accent", "#6B7A8C");
+  const head = document.createElement("div");
+  head.className = "cardhead";
+  head.innerHTML = '<h2>Added today</h2><span class="count"></span>';
+  sec.appendChild(head);
+
+  if(!extra.length){
+    const p = document.createElement("p");
+    p.className = "empty";
+    p.textContent = "Anything that came up today that isn't in the plan.";
+    sec.appendChild(p);
+  }
+
+  extra.forEach((item, i) => {
+    const lab = document.createElement("label");
+    lab.className = "item";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = !!item.done;
+    cb.addEventListener("change", () => {
+      const s = ensureDay(iso(current));
+      s.extra[i].done = cb.checked ? 1 : 0;
+      saveStore(store, iso(current)); updateProgress(); buildWeek();
+    });
+    const sp = document.createElement("span");
+    sp.textContent = item.t;
+    const del = document.createElement("button");
+    del.className = "del"; del.type = "button";
+    del.setAttribute("aria-label", "Remove task");
+    del.innerHTML = "&times;";
+    del.addEventListener("click", e => {
+      e.preventDefault(); e.stopPropagation();
+      const s = ensureDay(iso(current));
+      s.extra.splice(i, 1);
+      saveStore(store, iso(current)); render();
+    });
+    lab.appendChild(cb); lab.appendChild(sp); lab.appendChild(del);
+    sec.appendChild(lab);
+  });
+
+  const row = document.createElement("div");
+  row.className = "addrow";
+  const inp = document.createElement("input");
+  inp.type = "text"; inp.placeholder = "Add a task for this day";
+  const btn = document.createElement("button");
+  btn.type = "button"; btn.textContent = "Add";
+  function add(){
+    const t = inp.value.trim();
+    if(!t) return;
+    const s = ensureDay(iso(current));
+    if(!s.extra) s.extra = [];
+    s.extra.push({t:t, done:0});
+    saveStore(store, iso(current)); render();
+    const box = document.querySelector("#lists .addrow input[type=text]");
+    if(box) box.focus();
+  }
+  btn.addEventListener("click", add);
+  inp.addEventListener("keydown", e => { if(e.key === "Enter") add(); });
+  row.appendChild(inp); row.appendChild(btn);
+  sec.appendChild(row);
+  return sec;
+}
+
+/* ---------- what was left unticked yesterday ---------- */
+function pendingFrom(d){
+  const key = iso(d);
+  const st = store[key];
+  if(!st) return [];
+  const extra = st.extra || [];
+  const started = Object.keys(st.checked || {}).length > 0 || extra.length > 0;
+  if(!started) return [];                       // day was never opened — nothing to chase
+  const plan = planFor(d);
+  const out = [];
+  CORE.forEach((t, i) => {
+    if(!st.checked["core-" + i]) out.push({id:"core-" + i, text:t, color:"var(--core)"});
+  });
+  plan.tracks.forEach((items, ti) => items.forEach((t, i) => {
+    const id = "t" + ti + "-" + i;
+    if(!st.checked[id]) out.push({id:id, text:t, color:TRACKS[ti].color});
+  }));
+  extra.forEach((e, i) => { if(!e.done) out.push({extra:i, text:e.t, color:"#6B7A8C"}); });
+  return out;
+}
+
+function buildPending(){
+  const host = document.getElementById("pending");
+  host.innerHTML = "";
+  const prev = new Date(current); prev.setDate(current.getDate() - 1);
+  const items = pendingFrom(prev);
+  if(!items.length) return;
+  const pkey = iso(prev);
+
+  const sec = document.createElement("section");
+  sec.className = "card pending";
+  sec.style.setProperty("--accent", "#B5661C");
+  const head = document.createElement("div");
+  head.className = "cardhead";
+  head.innerHTML = '<h2>Left from ' + DOWFULL[prev.getDay()] + '</h2>' +
+                   '<span class="count">' + items.length + ' open</span>';
+  sec.appendChild(head);
+
+  items.forEach(it => {
+    const lab = document.createElement("label");
+    lab.className = "item";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.addEventListener("change", () => {
+      const s = ensureDay(pkey);
+      if("extra" in it) s.extra[it.extra].done = 1;
+      else s.checked[it.id] = 1;
+      saveStore(store, pkey); render();
+    });
+    const dot = document.createElement("i");
+    dot.className = "dot"; dot.style.background = it.color;
+    const sp = document.createElement("span");
+    sp.textContent = it.text;
+    lab.appendChild(cb); lab.appendChild(dot); lab.appendChild(sp);
+    sec.appendChild(lab);
+  });
+
+  const row = document.createElement("div");
+  row.className = "addrow";
+  const dismiss = document.createElement("button");
+  dismiss.type = "button";
+  dismiss.textContent = "Dismiss all";
+  dismiss.style.flex = "1";
+  dismiss.addEventListener("click", () => {
+    if(!confirm("Mark all " + items.length + " leftover items from " + pkey + " as done?")) return;
+    const s = ensureDay(pkey);
+    items.forEach(it => { if("extra" in it) s.extra[it.extra].done = 1; else s.checked[it.id] = 1; });
+    saveStore(store, pkey); render(); toast("Cleared leftovers from " + pkey);
+  });
+  row.appendChild(dismiss);
+  sec.appendChild(row);
+  host.appendChild(sec);
+}
+
+function refreshCounts(){
+  document.querySelectorAll("#lists .card").forEach(sec => {
+    const boxes = sec.querySelectorAll("input[type=checkbox]");
+    let done = 0; boxes.forEach(b => { if(b.checked) done++; });
+    sec.querySelector(".count").textContent = done + "/" + boxes.length;
+  });
+}
+
+function updateProgress(){
+  const boxes = document.querySelectorAll("#lists input[type=checkbox]");
+  let done = 0; boxes.forEach(b => { if(b.checked) done++; });
+  const total = boxes.length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById("progtext").textContent = done + " of " + total + " done";
+  document.getElementById("progpct").textContent = pct + "%";
+  const bar = document.getElementById("bar");
+  bar.querySelector("i").style.width = pct + "%";
+  bar.classList.toggle("full", pct === 100);
+  refreshCounts();
+}
+
+function buildWeek(){
+  const el = document.getElementById("week");
+  el.innerHTML = "";
+  const start = new Date(current); // start from current date
+  for(let i=0;i<7;i++){
+    const d = new Date(start); d.setDate(start.getDate()+i);
+    const k = iso(d);
+    const p = dayProgress(k, planFor(d));
+    const pct = p.total ? Math.round(p.done/p.total*100) : 0;
+    const div = document.createElement("div");
+    div.className = "wd" + (k === iso(current) ? " cur" : "");
+    div.innerHTML = '<div class="l">'+DOW[d.getDay()]+'</div><div class="n">'+d.getDate()+
+                    '</div><div class="ring"><i style="width:'+pct+'%"></i></div>';
+    div.addEventListener("click", () => { current = d; render(); });
+    el.appendChild(div);
+  }
+}
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+/* ---------- events ---------- */
+document.getElementById("prev").onclick = () => { current.setDate(current.getDate()-1); render(); };
+document.getElementById("next").onclick = () => { current.setDate(current.getDate()+1); render(); };
+document.getElementById("todaybtn").onclick = () => { current = new Date(); current.setHours(0,0,0,0); render(); };
+document.getElementById("picker").addEventListener("change", e => {
+  if(e.target.value){ current = fromIso(e.target.value); render(); }
+});
+document.getElementById("notes").addEventListener("input", e => {
+  ensureDay(iso(current)).notes = e.target.value;
+  saveStore(store, iso(current));
+});
+document.getElementById("clearday").onclick = async () => {
+  const key = iso(current);
+  if(!confirm("Clear all ticks and notes for " + key + "?")) return;
+  delete store[key];
+  await sheetDelete(key); render(); toast("Cleared " + key);
+};
+document.getElementById("clearall").onclick = async () => {
+  const n = Object.keys(store).length;
+  if(!confirm("Clear every saved day (" + n + ")? This cannot be undone.")) return;
+  store = {};
+  await sheetClearAll(); render(); toast("All saved days cleared");
+};
+document.addEventListener("keydown", e => {
+  if(e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
+  if(e.key === "ArrowLeft") document.getElementById("prev").click();
+  if(e.key === "ArrowRight") document.getElementById("next").click();
+});
+
+// Render today immediately, then sync from sheet in background
+render();
+(async()=>{
+  setStatus("syncing");
+  const all=await sheetGetAll();
+  if(all&&typeof all==="object"&&!all.error){
+    // only accept properly-formatted ISO date keys (YYYY-MM-DD)
+    const ISO_RE = /^\d{4}-\d{2}-\d{2}$/;
+    for(const k of Object.keys(all)){
+      if(ISO_RE.test(k)) store[k] = all[k];
+    }
+  }
+  setStatus("ready");
+  render(); // re-render with synced data
+})();
+
+function toggleSite(head){
+  head.classList.toggle('open');
+  const body = head.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+</script>
+</body>
+</html>

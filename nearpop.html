@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NearPop — Abhishek</title>
+<meta name="description" content="GPS-based hyperlocal discovery for Delhi NCR — find what's around you, right now.">
+<meta property="og:title" content="NearPop — Abhishek">
+<meta property="og:description" content="GPS-based hyperlocal discovery for Delhi NCR — find what's around you, right now.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/og-cover.webp">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Edu+TAS+Beginner:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+</head>
+<body>
+<nav>
+  <div class="container nav-in">
+    <a href="/" class="brand"><img src="img/logo-mark.webp" alt="AbhishekIndia" class="brand-logo"></a>
+    <button class="burger" id="burger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html#about">About</a>
+      <a href="index.html#work">What I do</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="journal.html">Journal</a>
+      <a href="index.html#contact" class="nav-cta">Get in touch</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">🌙</button>
+    </div>
+    </div>
+  </div>
+</nav>
+<div class="pd-hero">
+  <div class="container">
+    <a href="index.html#projects" class="back-link">← All projects</a>
+    <div class="pd-hero-grid">
+      <div>
+        <div class="pd-cat">Hyperlocal app</div>
+        <h1>NearPop</h1>
+        <p class="pd-lead">A discovery app that shows you shops, offers and services in your immediate neighbourhood, powered by your live location.</p>
+        <div class="pd-meta">
+          <span class="chip status building">Building</span>
+          <span class="chip">Firebase · Firestore · Cloud Functions · Android</span>
+        </div>
+        <div class="btns"><a href="https://www.nearpop.in" target="_blank" rel="noopener" class="btn btn-primary">Visit NearPop ↗</a></div>
+      </div>
+      <div><img src="img/nearpop-hero.webp" alt="NearPop screenshot" class="pd-hero-img" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'"></div>
+    </div>
+  </div>
+</div>
+
+<div class="pd-body">
+  <div class="container">
+    <div class="pd-cols">
+      <div class="reveal">
+        <h2>Overview</h2>
+        <p>NearPop answers a simple question: what's actually around me right now? Instead of generic city-wide listings, it uses your GPS position to surface nearby merchants, offers and services in Delhi NCR — the local layer the big platforms skip.</p>
+        <p>It ships as both a fast progressive web app and a native Android app, so it works whether someone taps a link or installs it from their home screen.</p>
+        <h2>What it does</h2>
+        <ul><li>Live GPS-based discovery of nearby merchants and offers</li><li>Progressive web app + native Android build from one codebase</li><li>Merchant onboarding with a claim-and-verify flow for listing ownership</li><li>Push notifications for nearby deals</li><li>Built for the everyday Delhi NCR high street, not just big chains</li></ul>
+        
+      </div>
+      <aside>
+        <div class="spec reveal">
+          <h3>At a glance</h3>
+          <dl>
+            <dt>Category</dt><dd>Hyperlocal app</dd>
+            <dt>Status</dt><dd>Building</dd>
+            <dt>Built with</dt><dd>Firebase · Firestore · Cloud Functions · Android</dd>
+            <dt>My role</dt><dd>Solo — product, engineering, design</dd>
+          </dl>
+          <a href="https://www.nearpop.in" target="_blank" rel="noopener" class="btn btn-primary">Visit site ↗</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div class="pd-gallery">
+  <div class="container">
+    <div class="gal-grid reveal">
+      <img src="img/nearpop-1.webp" alt="NearPop screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+      <img src="img/nearpop-2.webp" alt="NearPop screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+      <img src="img/nearpop-3.webp" alt="NearPop screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+    </div>
+  </div>
+</div>
+
+<div class="pd-next">
+  <div class="container">
+    <div class="display">Next up: UploadSure</div>
+    <div class="btns"><a href="uploadsure.html" class="btn btn-primary">See UploadSure →</a> <a href="index.html#projects" class="btn btn-ghost" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.3)">All projects</a></div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">© <span id="yr"></span> Abhishek · Built from Delhi NCR · <a href="index.html#home">Back to top ↑</a></div>
+</footer>
+<script>
+function initReveal(){
+  var els=document.querySelectorAll(".reveal:not(.in)");
+  if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in");});return;}
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target);}});},{threshold:.12});
+  els.forEach(function(e){io.observe(e);});
+}
+initReveal();
+var burger=document.getElementById("burger"),links=document.getElementById("navLinks");
+if(burger){burger.addEventListener("click",function(){links.classList.toggle("open");});
+links.addEventListener("click",function(e){if(e.target.tagName==="A")links.classList.remove("open");});}
+var yr=document.getElementById("yr");if(yr)yr.textContent=new Date().getFullYear();
+var tg=document.getElementById("themeToggle");
+function setThemeIcon(){var d=document.documentElement.getAttribute("data-theme")==="dark";if(tg)tg.textContent=d?"☀️":"🌙";}
+setThemeIcon();
+if(tg)tg.addEventListener("click",function(){var d=document.documentElement.getAttribute("data-theme")==="dark";var n=d?"light":"dark";document.documentElement.setAttribute("data-theme",n);try{localStorage.setItem("theme",n);}catch(e){}setThemeIcon();});
+</script>
+</body></html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CouponBoyz — Abhishek</title>
+<meta name="description" content="A deals and coupons site that's been running — and earning — for over a decade.">
+<meta property="og:title" content="CouponBoyz — Abhishek">
+<meta property="og:description" content="A deals and coupons site that's been running — and earning — for over a decade.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/og-cover.webp">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Edu+TAS+Beginner:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+</head>
+<body>
+<nav>
+  <div class="container nav-in">
+    <a href="/" class="brand"><img src="img/logo-mark.webp" alt="AbhishekIndia" class="brand-logo"></a>
+    <button class="burger" id="burger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html#about">About</a>
+      <a href="index.html#work">What I do</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="journal.html">Journal</a>
+      <a href="index.html#contact" class="nav-cta">Get in touch</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">🌙</button>
+    </div>
+    </div>
+  </div>
+</nav>
+<div class="pd-hero">
+  <div class="container">
+    <a href="index.html#projects" class="back-link">← All projects</a>
+    <div class="pd-hero-grid">
+      <div>
+        <div class="pd-cat">Deals & affiliate</div>
+        <h1>CouponBoyz</h1>
+        <p class="pd-lead">One of my longest-running projects: a deals and coupons destination that has quietly worked for more than ten years.</p>
+        <div class="pd-meta">
+          <span class="chip status live">Live</span>
+          <span class="chip">WordPress · Affiliate feeds</span>
+        </div>
+        <div class="btns"><a href="https://www.couponboyz.com" target="_blank" rel="noopener" class="btn btn-primary">Visit CouponBoyz ↗</a></div>
+      </div>
+      <div><img src="img/couponboyz-hero.webp" alt="CouponBoyz screenshot" class="pd-hero-img" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'"></div>
+    </div>
+  </div>
+</div>
+
+<div class="pd-body">
+  <div class="container">
+    <div class="pd-cols">
+      <div class="reveal">
+        <h2>Overview</h2>
+        <p>CouponBoyz curates deals, discount codes and offers across popular Indian and global stores. It's a content-and-affiliate business that has been live and profitable for over a decade.</p>
+        <p>The current focus is automation — pulling deals from affiliate network feeds and automatically expiring dead listings, so the freshness stays high without the manual grind.</p>
+        <h2>What it does</h2>
+        <ul><li>Curated deals and coupon codes across major stores</li><li>Over a decade of continuous operation</li><li>Affiliate-network feed integration (CSV / XML / API)</li><li>Move toward automated content and auto-expiry of dead listings</li></ul>
+        
+      </div>
+      <aside>
+        <div class="spec reveal">
+          <h3>At a glance</h3>
+          <dl>
+            <dt>Category</dt><dd>Deals & affiliate</dd>
+            <dt>Status</dt><dd>Live</dd>
+            <dt>Built with</dt><dd>WordPress · Affiliate feeds</dd>
+            <dt>My role</dt><dd>Solo — content, ops, automation</dd>
+          </dl>
+          <a href="https://www.couponboyz.com" target="_blank" rel="noopener" class="btn btn-primary">Visit site ↗</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div class="pd-gallery">
+  <div class="container">
+    <div class="gal-grid reveal">
+      <img src="img/couponboyz-1.webp" alt="CouponBoyz screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+      <img src="img/couponboyz-2.webp" alt="CouponBoyz screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+      <img src="img/couponboyz-3.webp" alt="CouponBoyz screenshot" class="" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+    </div>
+  </div>
+</div>
+
+<div class="pd-next">
+  <div class="container">
+    <div class="display">Next up: Stock Sniper Pro</div>
+    <div class="btns"><a href="stock-sniper-pro.html" class="btn btn-primary">See Stock Sniper Pro →</a> <a href="index.html#projects" class="btn btn-ghost" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.3)">All projects</a></div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">© <span id="yr"></span> Abhishek · Built from Delhi NCR · <a href="index.html#home">Back to top ↑</a></div>
+</footer>
+<script>
+function initReveal(){
+  var els=document.querySelectorAll(".reveal:not(.in)");
+  if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in");});return;}
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target);}});},{threshold:.12});
+  els.forEach(function(e){io.observe(e);});
+}
+initReveal();
+var burger=document.getElementById("burger"),links=document.getElementById("navLinks");
+if(burger){burger.addEventListener("click",function(){links.classList.toggle("open");});
+links.addEventListener("click",function(e){if(e.target.tagName==="A")links.classList.remove("open");});}
+var yr=document.getElementById("yr");if(yr)yr.textContent=new Date().getFullYear();
+var tg=document.getElementById("themeToggle");
+function setThemeIcon(){var d=document.documentElement.getAttribute("data-theme")==="dark";if(tg)tg.textContent=d?"☀️":"🌙";}
+setThemeIcon();
+if(tg)tg.addEventListener("click",function(){var d=document.documentElement.getAttribute("data-theme")==="dark";var n=d?"light":"dark";document.documentElement.setAttribute("data-theme",n);try{localStorage.setItem("theme",n);}catch(e){}setThemeIcon();});
+</script>
+</body></html>

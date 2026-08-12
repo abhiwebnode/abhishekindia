@@ -1,0 +1,27 @@
+IMAGES — all in /img/. You switched to .webp, so use .webp for photos
+and screenshots. KEEP favicon as .svg (browsers don't use webp favicons).
+
+BRAND / SHARED
+  logo.webp            full lockup (not required by pages; optional use)
+  logo-mark.webp       compact mark — shown in the nav bar   (~512x512)
+  favicon.svg          browser-tab icon — KEEP AS SVG (or .png), not webp
+  og-cover.webp        social-share preview 1200x630
+                       (tip: LinkedIn/WhatsApp render JPG/PNG more reliably
+                        than WebP for share previews — keep og-cover.jpg if
+                        shares matter, and tell me to point og:image at it)
+  me.webp              your photo (hero avatar, shown round)
+
+PROJECT CARD ICONS (shown on the home "Things I've built" cards)
+  Square site favicon/logo, ~128x128, transparent or solid:
+  nearpop-icon.webp        uploadsure-icon.webp      taxsavinglab-icon.webp
+  couponboyz-icon.webp     stock-sniper-pro-icon.webp  mcx-payoff-tools-icon.webp
+  (If an icon file is missing, the card falls back to the letter — no breakage.)
+
+PER-PROJECT PAGE IMAGES
+  hero = 1200x900 (4:3) ; gallery -1/-2/-3 = 1200x750 (16:10)
+  nearpop-hero.webp      nearpop-1.webp      nearpop-2.webp      nearpop-3.webp
+  uploadsure-hero.webp   uploadsure-1.webp   uploadsure-2.webp   uploadsure-3.webp
+  taxsavinglab-hero.webp taxsavinglab-1.webp taxsavinglab-2.webp taxsavinglab-3.webp
+  couponboyz-hero.webp   couponboyz-1.webp   couponboyz-2.webp   couponboyz-3.webp
+  stock-sniper-pro-hero.webp  sniper-1.webp  sniper-2.webp  sniper-3.webp
+  mcx-payoff-tools-hero.webp  mcx-1.webp     mcx-2.webp     mcx-3.webp
