@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0B1A2E">
-<title>MCX Silver Mini — Strategy Payoff Analyzer</title>
+<title>NSE Stock F&O — Strategy Payoff Analyzer</title>
 <style>
   :root{
     /* swap --font to: "Bookman Old Style", serif   or   "Times New Roman", serif */
     --font: Arial, Helvetica, sans-serif;
     --ink:#0B1A2E; --panel:#12263F; --panel2:#173250; --line:#25456B;
-    --text:#E9F1FA; --mute:#8AA6C4; --brass:#C3D0DE; --brass-dim:rgba(195,208,222,.14);
+    --text:#E9F1FA; --mute:#8AA6C4; --brass:#8B7BFF; --brass-dim:rgba(139,123,255,.16);
     --up:#2ED47A; --dn:#FF5A5A;
     --upBg:rgba(46,212,122,.13); --dnBg:rgba(255,90,90,.12);
     --upA:rgba(46,212,122,.22); --dnA:rgba(255,90,90,.20);
@@ -18,7 +18,7 @@
   }
   [data-theme="light"]{
     --ink:#E7EEF6; --panel:#FFFFFF; --panel2:#F1F6FB; --line:#C9DAEC;
-    --text:#0B1A2E; --mute:#54718F; --brass:#4E6480; --brass-dim:rgba(78,100,128,.12);
+    --text:#0B1A2E; --mute:#54718F; --brass:#5240C4; --brass-dim:rgba(82,64,196,.11);
     --up:#0E9F5F; --dn:#D6342C;
     --upBg:rgba(14,159,95,.11); --dnBg:rgba(214,52,44,.10);
     --upA:rgba(14,159,95,.18); --dnA:rgba(214,52,44,.16);
@@ -81,6 +81,23 @@
 
   /* ---- buttons ---- */
   .actions{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
+  .actions.five{grid-template-columns:repeat(5,1fr)}
+  .warn-dot{display:none;background:var(--dn);color:#fff;border-radius:50%;width:12px;height:12px;
+    font-size:8.5px;line-height:12px;text-align:center;margin-left:3px;font-weight:700}
+  .warn-dot.on{display:inline-block}
+  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;padding:14px;overflow-y:auto}
+  .modal.on{display:block}
+  .modal-in{max-width:560px;margin:20px auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+  .sym-list{max-height:44vh;overflow-y:auto}
+  .sym-list td{padding:5px 6px}
+  .sym-list input{width:100%;border:1px solid transparent;background:var(--panel2);color:var(--text);
+    border-radius:6px;padding:6px;font-size:12.5px}
+  .sym-list input:hover{border-color:var(--brass)}
+  .sym-list .s-name{text-transform:uppercase}
+  .paste{width:100%;min-height:80px;background:var(--panel2);color:var(--text);border:1px solid var(--line);
+    border-radius:7px;padding:8px;font-size:12px;font-family:inherit}
+  .modal-ft{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;padding:10px}
+  @media (max-width:380px){.actions.five{grid-template-columns:repeat(3,1fr)}}
   .btn{padding:10px 4px;border-radius:8px;font-weight:700;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;
     border:1px solid var(--line);background:var(--panel);color:var(--mute);cursor:pointer}
   .btn:hover{color:var(--text);border-color:var(--brass)}
@@ -146,6 +163,17 @@
   .hero-cell.up{background:var(--upBg)}
   .hero-cell.dn{background:var(--dnBg)}
 
+
+  .pk-list{max-height:62vh;overflow-y:auto;padding:8px}
+  .pk-cat{font-size:8.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--mute);
+    font-weight:700;padding:10px 4px 5px}
+  .pk{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);
+    border-radius:8px;padding:9px 10px;margin-bottom:6px;cursor:pointer;color:var(--text)}
+  .pk:hover{border-color:var(--brass)}
+  .pk b{display:block;font-size:12.5px;font-weight:700}
+  .pk i{display:block;font-style:normal;font-size:10px;color:var(--mute);margin-top:2px;line-height:1.5}
+  .pk .legs{display:block;font-size:9.5px;color:var(--brass);margin-top:4px;letter-spacing:.3px}
+  .pk-note{font-size:10px;color:var(--mute);padding:9px 12px;line-height:1.6;border-top:1px solid var(--line)}
   footer{font-size:9px;color:var(--mute);text-align:center;padding:12px 4px 16px;line-height:1.7;letter-spacing:.4px}
   @media (max-width:380px){.settings{grid-template-columns:repeat(2,1fr)}.hero-cell span{font-size:19px}}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -165,24 +193,25 @@
   .sbar-switch a:hover,.sbar-back:hover{color:var(--brass);border-color:var(--brass)}
   .sbar-switch a.cur{background:var(--brass);color:#fff;border-color:transparent}
 </style>
-<script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#16243d">
 <link rel="apple-touch-icon" href="img/icon-192.png">
+<script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 </head>
 <body>
 <div class="sbar">
   <a class="sbar-home" href="index.html" title="Home"><img src="img/logo-mark.webp" alt="AbhishekIndia"></a>
-  <nav class="sbar-switch"><a href="crude.html">Crude</a><a href="gold.html">Gold</a><a href="silver.html" class="cur">Silver</a><a href="usdinr.html">USDINR</a><a href="stocks.html" >Stocks</a></nav>
+  <nav class="sbar-switch"><a href="crude.html">Crude</a><a href="gold.html">Gold</a><a href="silver.html">Silver</a><a href="usdinr.html">USDINR</a><a href="stocks.html" class="cur">Stocks</a></nav>
   <a class="sbar-back" href="mcx-payoff-tools.html">↩ Tools</a>
 </div>
 
 
 <header>
   <div class="brand">
-    <div class="mark">Ag</div>
+    <div class="mark">NS</div>
     <div>
-      <h1>Silver <b>Payoff</b></h1>
-      <div class="sub">MCX SILVERM · ₹/kg · by <a href="mailto:abhishekh328@gmail.com">Abhishek</a></div>
+      <h1>Stock <b>Payoff</b></h1>
+      <div class="sub">NSE F&amp;O · by <a href="mailto:abhishekh328@gmail.com">Abhishek</a></div>
     </div>
   </div>
   <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">LIGHT</button>
@@ -191,18 +220,14 @@
 <div class="panel">
   <div class="panel-hd"><h2>Contract &amp; range</h2><span class="hint mono" id="lotHint"></span></div>
   <div class="panel-bd settings">
-    <div class="field"><label>Contract</label>
-      <select id="contract">
-        <option value="5">Silver Mini 5kg</option>
-        <option value="30">Silver 30kg</option>
-        <option value="0">Custom</option>
-      </select>
+    <div class="field sym-field"><label>Symbol</label>
+      <select id="contract"></select>
     </div>
-    <div class="field"><label>Multiplier</label><input type="number" id="lotSize" value="5" min="1"></div>
-    <div class="field"><label>Spot / CMP</label><input type="number" id="spot" value="233000" step="1"></div>
-    <div class="field"><label>From</label><input type="number" id="rangeFrom" value="215000"></div>
-    <div class="field"><label>To</label><input type="number" id="rangeTo" value="255000"></div>
-    <div class="field"><label>Step</label><input type="number" id="priceStep" value="1000" min="1"></div>
+    <div class="field"><label>Lot size </label><input type="number" id="lotSize" value="1" min="1"></div>
+    <div class="field"><label>Spot / CMP</label><input type="number" id="spot" value="6000" step="0.1"></div>
+    <div class="field"><label>From</label><input type="number" id="rangeFrom" value="5000" step="100"></div>
+    <div class="field"><label>To</label><input type="number" id="rangeTo" value="7500" step="100"></div>
+    <div class="field"><label>Step</label><input type="number" id="priceStep" value="100" min="0" step="100"></div>
   </div>
 </div>
 
@@ -217,8 +242,9 @@
   <div class="empty" id="emptyRow">No legs yet — tap ADD LEG</div>
 </div>
 
-<div class="actions">
+<div class="actions five">
   <button class="btn b-add" onclick="addRow()">Add leg</button>
+  <button class="btn" onclick="openSyms()">Symbols</button>
   <button class="btn" onclick="showPresets()">Preset</button>
   <button class="btn" onclick="exportCsv()">CSV</button>
   <button class="btn b-clr" onclick="clearAll()">Clear</button>
@@ -262,11 +288,56 @@
   </div>
 </div>
 
-<footer>Silver Mini: 5kg lot quoted per kg, so multiplier is 5. Strike interval ₹1,000. Expiry payoff only — ignores time value, IV, brokerage, STT and MTM margin.<br>Saves automatically in this browser. Not investment advice.</footer>
+<div class="modal" id="symModal">
+  <div class="modal-in">
+    <div class="panel-hd"><h2>Symbols &amp; lot sizes</h2><span class="hint" id="symCount"></span></div>
+    <p id="symIntro" style="display:none;font-size:11px;color:var(--text);background:var(--brass-dim);padding:9px 12px;line-height:1.6;margin:0">Add the stocks you trade with their current NSE lot sizes. Nothing is pre-filled &mdash; these are your numbers, so check them against your broker. Fastest way in: paste a <b>SYMBOL,LOT</b> list into the box below.</p>
+    <div class="sym-list">
+      <table><thead><tr><th style="width:44%">Symbol</th><th style="width:26%">Lot</th><th style="width:20%">Ref price</th><th style="width:10%"></th></tr></thead>
+      <tbody id="symBody"></tbody></table>
+    </div>
+    <div class="panel-bd">
+      <label style="font-size:8.5px;color:var(--mute);font-weight:700;letter-spacing:1px;text-transform:uppercase">Bulk paste — SYMBOL,LOT per line</label>
+      <textarea class="paste" id="symPaste" placeholder="SYMBOL,LOT&#10;SYMBOL,LOT&#10;SYMBOL,LOT"></textarea>
+    </div>
+    <div class="modal-ft">
+      <button class="btn" onclick="addSym()">Add row</button>
+      <button class="btn" onclick="importSyms()">Import paste</button>
+      <button class="btn b-add" onclick="closeSyms()">Done</button>
+    </div>
+    <div class="modal-ft" style="padding-top:0">
+      <button class="btn" onclick="backupSyms()">Backup file</button>
+      <button class="btn" onclick="$('symFile').click()">Restore file</button>
+      <button class="btn" onclick="copySeed()">Copy SEED</button>
+    </div>
+    <input type="file" id="symFile" accept=".json,.csv,.txt" style="display:none">
+    <p style="font-size:9.5px;color:var(--mute);padding:0 12px 12px;line-height:1.6">
+      Symbols live in this browser's storage, not in the file. Use <b>Backup file</b> to keep a copy,
+      or <b>Copy SEED</b> and paste it over the <code>const SEED = [...]</code> line inside this HTML
+      to make the list permanent in the file itself.</p>
+  </div>
+</div>
+
+<div class="modal" id="pkModal">
+  <div class="modal-in">
+    <div class="panel-hd"><h2>Strategy presets</h2><span class="hint" id="pkAt"></span></div>
+    <div class="pk-list" id="pkList"></div>
+    <p class="pk-note">Strikes snap to the live ladder around your spot. Premiums are rough placeholders &mdash;
+      replace them with actual LTP before reading anything into the numbers.</p>
+    <div class="modal-ft"><button class="btn" onclick="closePresets()">Cancel</button></div>
+  </div>
+</div>
+
+<footer>Crude: 100 barrel lot quoted per barrel. Expiry payoff only — ignores time value, IV, brokerage and margin.<br>Saves automatically in this browser. Not investment advice.</footer>
 
 <script>
 const $ = id => document.getElementById(id);
-const LSK = 'silverm_v1';
+/* DP = decimals shown for prices, BEDP = decimals for breakevens, PAD = tail added
+   to the analysis window when probing the far end of the payoff. */
+let DP = 2, BEDP = 2, PAD = 2000;
+const fmtPx = v => v.toFixed(DP);
+const LSK = 'nsefo_v1';
+const SYMK = 'nsefo_symbols_v1';
 let rowId = 0, chart = null, chartReady = false, saveTimer = null;
 
 /* ---------- helpers ---------- */
@@ -285,6 +356,131 @@ const store = {
 };
 const cssVar = n => getComputedStyle(document.body).getPropertyValue(n).trim();
 
+/* ---------- symbols: user-owned, editable, survives NSE lot revisions ---------- */
+const SEED = [];   // empty by design - you enter your own symbols on first run
+
+let syms = [];
+
+function loadSyms(){
+  try { syms = JSON.parse(store.get(SYMK)) || []; } catch(e){ syms = []; }
+  if (!syms.length && SEED.length) syms = SEED.map(x => ({ n:x[0], l:x[1], p:x[2] || 0, v:true }));
+}
+function saveSyms(){ store.set(SYMK, JSON.stringify(syms)); }
+function curSym(){ const o = $('contract'); return o && o.value ? o.value : ''; }
+
+function fillSymSelect(keep){
+  const sel = $('contract');
+  const want = keep || sel.value;
+  sel.innerHTML = (syms.length ? syms.map(s => `<option value="${s.n}">${s.n} · ${s.l}</option>`).join('')
+                               : '<option value="">— add a symbol —</option>')
+    + (syms.length ? '<option value="">— custom —</option>' : '');
+  sel.value = syms.some(s => s.n === want) ? want : (syms[0] ? syms[0].n : '');
+}
+
+// NSE strike ladders scale with price; this mirrors the usual bands closely enough to seed from.
+function strikeStepFor(px){
+  if (px <= 50) return 2.5; if (px <= 100) return 5; if (px <= 250) return 10;
+  if (px <= 500) return 20; if (px <= 1000) return 20; if (px <= 2500) return 50;
+  if (px <= 5000) return 100; return 200;
+}
+
+function applySym(name, reseedRange){
+  const s = syms.find(x => x.n === name);
+  if (!s) return;
+  $('lotSize').value = s.l;
+  if (reseedRange){
+    const p = +s.p || num($('spot').value) || 1000;
+    if (+s.p) $('spot').value = s.p;
+    const k = strikeStepFor(p);
+    $('rangeFrom').value = +(Math.round((p * 0.85) / k) * k).toFixed(2);
+    $('rangeTo').value   = +(Math.round((p * 1.15) / k) * k).toFixed(2);
+    $('priceStep').value = k;
+  }
+}
+
+/* symbol manager */
+function renderSyms(){
+  $('symBody').innerHTML = syms.map((s,i) =>
+    `<tr>
+       <td><input class="s-name" value="${s.n}" placeholder="symbol" oninput="editSym(${i},'n',this.value)"></td>
+       <td><input type="number" min="1" value="${s.l || ''}" placeholder="lot" oninput="editSym(${i},'l',this.value)"></td>
+       <td><input type="number" min="0" step="0.05" value="${s.p || ''}" placeholder="—" oninput="editSym(${i},'p',this.value)"></td>
+       <td style="text-align:center"><button class="btn-del" onclick="delSym(${i})">✕</button></td>
+     </tr>`).join('');
+  $('symCount').textContent = syms.length + ' SYMBOLS';
+}
+function editSym(i, k, v){
+  if (k === 'n') syms[i].n = v.trim().toUpperCase();
+  else syms[i][k] = parseFloat(v) || 0;
+  if (k === 'l') syms[i].v = true;   // user-entered lot is treated as verified
+  saveSyms(); fillSymSelect(); 
+}
+function addSym(){ syms.push({ n:'', l:0, p:0, v:true }); saveSyms(); renderSyms(); fillSymSelect(); }
+function delSym(i){ syms.splice(i,1); saveSyms(); renderSyms(); fillSymSelect(); }
+function openSyms(first){
+  if (!syms.length) syms.push({ n:'', l:0, p:0, v:true });
+  renderSyms();
+  $('symIntro').style.display = first ? 'block' : 'none';
+  $('symModal').classList.add('on');
+  const f = $('symBody').querySelector('input'); if (f) setTimeout(() => f.focus(), 60);
+}
+function closeSyms(){
+  syms = syms.filter(s => s.n && s.l >= 1);
+  saveSyms(); fillSymSelect();
+  $('symModal').classList.remove('on');
+  applySym(curSym(), true); refresh();
+}
+function importSyms(){
+  const txt = $('symPaste').value.trim();
+  if (!txt) return;
+  let n = 0;
+  txt.split(/\r?\n/).forEach(line => {
+    const parts = line.split(/[,\t;]+/).map(x => x.trim());
+    if (parts.length < 2) return;
+    const name = parts[0].toUpperCase(), lot = parseFloat(parts[1]), px = parseFloat(parts[2]) || 0;
+    if (!name || !Number.isFinite(lot) || lot < 1) return;
+    const ex = syms.find(s => s.n === name);
+    if (ex){ ex.l = lot; ex.v = true; if (px) ex.p = px; }
+    else syms.push({ n:name, l:lot, p:px, v:true });
+    n++;
+  });
+  $('symPaste').value = '';
+  saveSyms(); renderSyms(); fillSymSelect();
+  warn(n ? 'Imported ' + n + ' symbol' + (n>1?'s':'') + '.' : 'Nothing recognised — use SYMBOL,LOT per line.');
+}
+
+function dl(name, text, mime){
+  const b = new Blob([text], { type: mime });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(b); a.download = name; a.click();
+  URL.revokeObjectURL(a.href);
+}
+function backupSyms(){
+  dl('fo-symbols.json', JSON.stringify(syms, null, 1), 'application/json');
+}
+function copySeed(){
+  const code = 'const SEED = [\n' +
+    syms.map(s => `  ['${s.n}',${s.l}${s.p ? ',' + s.p : ''}]`).join(',\n') + '\n];';
+  const done = () => warn('SEED copied — paste it over the existing "const SEED = [...]" block in this file.');
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, () => prompt('Copy this:', code));
+  else prompt('Copy this:', code);
+}
+function restoreSyms(file){
+  const r = new FileReader();
+  r.onload = () => {
+    let data = null;
+    try { data = JSON.parse(r.result); } catch(e){}
+    if (Array.isArray(data)){
+      syms = data.filter(x => x && x.n && x.l).map(x => ({ n:String(x.n).toUpperCase(), l:+x.l, p:+x.p || 0, v:true }));
+    } else {
+      $('symPaste').value = r.result; importSyms(); return;
+    }
+    saveSyms(); renderSyms(); fillSymSelect();
+    warn('Restored ' + syms.length + ' symbols.');
+  };
+  r.readAsText(file);
+}
+
 /* ---------- theme ---------- */
 function applyTheme(t){
   document.documentElement.setAttribute('data-theme', t);
@@ -298,7 +494,7 @@ function toggleTheme(){
 
 /* ---------- legs ---------- */
 function addRow(d){
-  d = Object.assign({ t:'CE', s:233000, dir:'long', l:1, a:7500 }, d || {});
+  d = Object.assign({ t:'CE', s:6000, dir:'long', l:1, a:120 }, d || {});
   const id = rowId++;
   const tr = document.createElement('tr');
   tr.id = 'r_' + id;
@@ -309,13 +505,13 @@ function addRow(d){
         <option value="PE"${d.t==='PE'?' selected':''}>PE</option>
         <option value="FUT"${d.t==='FUT'?' selected':''}>FUT</option>
       </select></td>
-     <td class="c-strk"><input type="number" id="s${id}" class="row-input" value="${d.s}" step="1000" min="0"${d.t==='FUT'?' disabled':''}></td>
+     <td class="c-strk"><input type="number" id="s${id}" class="row-input" value="${d.s}" step="any" min="0"${d.t==='FUT'?' disabled':''}></td>
      <td class="c-dir"><select id="p${id}">
         <option value="long"${d.dir==='long'?' selected':''}>B</option>
         <option value="short"${d.dir==='short'?' selected':''}>S</option>
       </select></td>
      <td class="c-lots"><input type="number" id="l${id}" class="row-input" value="${d.l}" min="1" step="1"></td>
-     <td class="c-avg"><input type="number" id="a${id}" class="row-input" value="${d.a}" step="0.1" min="0"></td>
+     <td class="c-avg"><input type="number" id="a${id}" class="row-input" value="${d.a}" step="0.05" min="0"></td>
      <td class="c-del"><button class="btn-del" title="Remove leg" onclick="removeRow(${id})">✕</button></td>`;
   $('posBody').appendChild(tr);
   $('t'+id).addEventListener('change', () => { $('s'+id).disabled = $('t'+id).value === 'FUT'; });
@@ -325,22 +521,73 @@ function addRow(d){
 function removeRow(id){ const el = $('r_'+id); if (el) el.remove(); refresh(); }
 function clearAll(){ if (confirm('Remove all legs?')) { $('posBody').innerHTML = ''; refresh(); } }
 
-function showPresets(){
-  const spot = num($('spot').value) || 6000;
-  const k = Math.round(spot / 1000) * 1000;
-  const menu = [
-    ['1  Bull call spread', [{t:'CE',s:k,dir:'long',l:1,a:7500},{t:'CE',s:k+4000,dir:'short',l:1,a:3200}]],
-    ['2  Bear put spread',  [{t:'PE',s:k,dir:'long',l:1,a:7500},{t:'PE',s:k-4000,dir:'short',l:1,a:3200}]],
-    ['3  Long straddle',    [{t:'CE',s:k,dir:'long',l:1,a:7500},{t:'PE',s:k,dir:'long',l:1,a:7500}]],
-    ['4  Short strangle',   [{t:'CE',s:k+4000,dir:'short',l:1,a:3200},{t:'PE',s:k-4000,dir:'short',l:1,a:3200}]],
-    ['5  Iron condor',      [{t:'PE',s:k-8000,dir:'long',l:1,a:1300},{t:'PE',s:k-2000,dir:'short',l:1,a:4800},{t:'CE',s:k+2000,dir:'short',l:1,a:4800},{t:'CE',s:k+8000,dir:'long',l:1,a:1300}]],
-    ['6  Covered future',   [{t:'FUT',s:0,dir:'long',l:1,a:k},{t:'CE',s:k+4000,dir:'short',l:1,a:3200}]]
+const ATMPCT = 0.035, WING = 3, NEAR = 2;
+const rp = v => +v.toFixed(2);   // premium rounding
+const rk = v => +v.toFixed(2);   // strike rounding
+const kStep = px => strikeStepFor(px);
+
+function presetDefs(spot){
+  const st = kStep(spot);
+  const k  = rk(Math.round(spot / st) * st);
+  const W  = st * WING, N = st * NEAR;                       // wing and inner offsets
+  const A  = rp(spot * ATMPCT);                              // at-the-money premium
+  const O  = rp(A * 0.38), F = rp(A * 0.16), M = rp(A * 0.62); // otm / far-otm / mid
+  const CE = (s,d,a,l) => ({t:'CE', s:rk(s), dir:d, l:l||1, a:a});
+  const PE = (s,d,a,l) => ({t:'PE', s:rk(s), dir:d, l:l||1, a:a});
+  const FU = (a,d,l)   => ({t:'FUT', s:0, dir:d, l:l||1, a:a});
+  return [
+    ['Directional', [
+      ['Long future',        'Straight bullish. Unlimited both ways.',            [FU(k,'long')]],
+      ['Short future',       'Straight bearish. Unlimited both ways.',            [FU(k,'short')]],
+      ['Long call',          'Bullish, risk capped at the premium paid.',         [CE(k,'long',A)]],
+      ['Long put',           'Bearish, risk capped at the premium paid.',         [PE(k,'long',A)]],
+      ['Bull call spread',   'Bullish debit. Capped profit and loss.',            [CE(k,'long',A), CE(k+W,'short',O)]],
+      ['Bear put spread',    'Bearish debit. Capped profit and loss.',            [PE(k,'long',A), PE(k-W,'short',O)]],
+      ['Bull put spread',    'Bullish credit. You keep the premium if it holds.', [PE(k,'short',A), PE(k-W,'long',O)]],
+      ['Bear call spread',   'Bearish credit. You keep the premium if it holds.', [CE(k,'short',A), CE(k+W,'long',O)]]
+    ]],
+    ['Volatility', [
+      ['Long straddle',      'Big move either way. Loses if it sits still.',      [CE(k,'long',A), PE(k,'long',A)]],
+      ['Long strangle',      'Cheaper than a straddle, needs a bigger move.',     [CE(k+W,'long',O), PE(k-W,'long',O)]],
+      ['Short straddle',     'Range-bound bet. Unlimited risk both sides.',       [CE(k,'short',A), PE(k,'short',A)]],
+      ['Short strangle',     'Wider range-bound bet. Unlimited risk.',            [CE(k+W,'short',O), PE(k-W,'short',O)]]
+    ]],
+    ['Range / income', [
+      ['Iron condor',        'Profits in a range, risk capped on both wings.',    [PE(k-W*2,'long',F), PE(k-N,'short',M), CE(k+N,'short',M), CE(k+W*2,'long',F)]],
+      ['Iron butterfly',     'Tighter condor. More credit, narrower range.',      [PE(k-W,'long',O), PE(k,'short',A), CE(k,'short',A), CE(k+W,'long',O)]],
+      ['Call butterfly',     'Pins near the middle strike. Cheap, low odds.',     [CE(k-W,'long',A), CE(k,'short',M,2), CE(k+W,'long',O)]],
+      ['Call ratio spread',  'Mildly bullish credit. Risk opens up above.',       [CE(k,'long',A), CE(k+W,'short',O,2)]]
+    ]],
+    ['Hedged', [
+      ['Covered call',       'Long future, sell an upside call for premium.',     [FU(k,'long'), CE(k+W,'short',O)]],
+      ['Protective put',     'Long future with a downside floor.',                [FU(k,'long'), PE(k-W,'long',O)]],
+      ['Collar',             'Long future, floor below, cap above. Cheap hedge.', [FU(k,'long'), PE(k-W,'long',O), CE(k+W,'short',O)]]
+    ]]
   ];
-  const pick = prompt('Load a preset (replaces current legs):\n\n' + menu.map(m => m[0]).join('\n') + '\n\nEnter number:');
-  const i = parseInt(pick, 10) - 1;
-  if (!(i >= 0 && i < menu.length)) return;
+}
+
+let pkCache = null;
+function showPresets(){
+  const spot = num($('spot').value);
+  if (!Number.isFinite(spot) || spot <= 0){ warn('Enter a spot price first - presets build strikes around it.'); return; }
+  pkCache = presetDefs(spot);
+  $('pkAt').textContent = 'AROUND ' + fmtPx(spot);
+  $('pkList').innerHTML = pkCache.map((cat, ci) =>
+    `<div class="pk-cat">${cat[0]}</div>` + cat[1].map((p, pi) => {
+      const legs = p[2].map(l => (l.dir === 'long' ? 'B' : 'S') + (l.l > 1 ? l.l : '') + ' ' +
+        (l.t === 'FUT' ? 'FUT' : fmtPx(l.s) + l.t)).join('  ·  ');
+      return `<button class="pk" onclick="loadPreset(${ci},${pi})">
+                <b>${p[0]}</b><i>${p[1]}</i><span class="legs">${legs}</span></button>`;
+    }).join('')).join('');
+  $('pkModal').classList.add('on');
+}
+function closePresets(){ $('pkModal').classList.remove('on'); }
+function loadPreset(ci, pi){
+  const legs = pkCache[ci][1][pi][2];
   $('posBody').innerHTML = '';
-  menu[i][1].forEach(addRow);
+  legs.forEach(l => addRow({ t:l.t, s:l.s, dir:l.dir, l:l.l, a:l.a }));
+  closePresets();
+  refresh();
 }
 
 function readPositions(){
@@ -388,10 +635,10 @@ function whereLabel(nodes, ys, val){
   return 'at ' + groups.map(g => {
     const a = g[0], b = g[g.length-1];
     if (a === 0 && b === last) return 'any price';
-    if (a === 0) return '≤ ' + Math.round(nodes[b]);
-    if (b === last) return '≥ ' + Math.round(nodes[a]);
-    if (a === b) return Math.round(nodes[a]);
-    return Math.round(nodes[a]) + '–' + Math.round(nodes[b]);
+    if (a === 0) return '≤ ' + fmtPx(nodes[b]);
+    if (b === last) return '≥ ' + fmtPx(nodes[a]);
+    if (a === b) return fmtPx(nodes[a]);
+    return fmtPx(nodes[a]) + '–' + fmtPx(nodes[b]);
   }).join(' & ');
 }
 
@@ -399,7 +646,7 @@ function whereLabel(nodes, ys, val){
 function analyze(positions, lot){
   const strikes = [...new Set(positions.filter(p => p.t !== 'FUT').map(p => p.s))].sort((a,b) => a-b);
   const refs = strikes.concat(positions.map(p => p.a)).filter(v => v > 0);
-  const far = (refs.length ? Math.max(...refs) : 5000) * 2 + 5000;
+  const far = (refs.length ? Math.max(...refs) : 5000) * 2 + PAD;
   const nodes = [...new Set([0, ...strikes, far])].sort((a,b) => a-b);
   const ys = nodes.map(x => payoff(x, positions, lot));
   const tol = 1e-6;
@@ -467,8 +714,13 @@ function calculate(){
   const { positions, bad } = readPositions();
 
   $('legHint').textContent = positions.length ? positions.length + ' LEG' + (positions.length > 1 ? 'S' : '') : '';
-  $('lotHint').textContent = Number.isFinite(lot) ? '×' + lot + ' (5kg lot ÷ 1kg quote)' : '';
+  $('lotHint').textContent = Number.isFinite(lot) ? '×' + lot + ' SHARES / LOT' : '';
 
+  if (!syms.length){
+    $('results').style.display = 'none';
+    warn('No symbols yet - tap SYMBOLS to add a stock and its lot size.');
+    return;
+  }
   if (!positions.length){
     $('results').style.display = 'none';
     warn(bad.length ? 'Leg ' + bad.join(', ') + ' is incomplete — fill strike, lots and price.' : '');
@@ -476,10 +728,13 @@ function calculate(){
   }
   if (!Number.isFinite(lot) || lot <= 0){ warn('Lot size must be a positive number.'); $('results').style.display = 'none'; return; }
   if (!Number.isFinite(from) || !Number.isFinite(to) || from >= to){ warn('Range "From" must be below "To".'); $('results').style.display = 'none'; return; }
-  if (!Number.isFinite(step) || step <= 0) step = 100;
+  if (!Number.isFinite(step) || step <= 0) step = +$('priceStep').defaultValue || 1;
   if ((to - from) / step > 800) step = Math.ceil((to - from) / 800);
 
   warn(bad.length ? 'Skipping incomplete leg ' + bad.join(', ') + '.' : '');
+
+  DP = to < 100 ? 2 : (to < 1000 ? 1 : 0);
+  BEDP = DP + 2;
 
   const a = analyze(positions, lot);
 
@@ -510,20 +765,20 @@ function calculate(){
     const sp = payoff(spot, positions, lot);
     $('spotPnl').textContent = inr(sp);
     $('spotPnl').style.color = sp >= 0 ? 'var(--up)' : 'var(--dn)';
-    $('spotNote').textContent = 'if silver expires at ' + Math.round(spot);
+    $('spotNote').textContent = 'if ' + (curSym() || 'stock') + ' expires at ' + fmtPx(spot);
   } else { $('spotPnl').textContent = '—'; $('spotNote').textContent = 'enter a spot price'; }
 
-  $('bePoints').textContent = a.be.length ? a.be.map(v => v.toFixed(1)).join('   ·   ') : 'None';
+  $('bePoints').textContent = a.be.length ? a.be.map(v => v.toFixed(BEDP)).join('   ·   ') : 'None';
   $('beNote').textContent = a.be.length
     ? (a.be.length === 1 ? 'exact crossover' : a.be.length + ' crossovers')
     : (payoff(0, positions, lot) >= 0 ? 'profitable across all prices' : 'never breaks even');
 
   // table rows: grid + every strike + every breakeven + spot, inside range
   const marks = new Map();
-  for (let px = from; px <= to + 1e-9; px += step) marks.set(+px.toFixed(2), '');
-  positions.forEach(p => { if (p.t !== 'FUT' && p.s >= from && p.s <= to) marks.set(+p.s.toFixed(2), 'K'); });
-  a.be.forEach(v => { if (v >= from && v <= to) marks.set(+v.toFixed(2), 'BE'); });
-  if (Number.isFinite(spot) && spot >= from && spot <= to) marks.set(+spot.toFixed(2), 'SPOT');
+  for (let px = from; px <= to + 1e-9; px += step) marks.set(+px.toFixed(4), '');
+  positions.forEach(p => { if (p.t !== 'FUT' && p.s >= from && p.s <= to) marks.set(+p.s.toFixed(4), 'K'); });
+  a.be.forEach(v => { if (v >= from && v <= to) marks.set(+v.toFixed(4), 'BE'); });
+  if (Number.isFinite(spot) && spot >= from && spot <= to) marks.set(+spot.toFixed(4), 'SPOT');
 
   const tagMap = { K:'tag-k', BE:'tag-be', SPOT:'tag-sp' };
   const rowCls = { BE:' is-be', SPOT:' is-spot' };
@@ -533,7 +788,7 @@ function calculate(){
     const cls = y >= 0 ? 'txt-up' : 'txt-dn';
     const m = marks.get(px);
     const tag = m ? `<span class="tag ${tagMap[m]}">${m}</span>` : '';
-    return `<tr class="${y >= 0 ? 'row-up' : 'row-dn'}${rowCls[m] || ''}"><td>${px % 1 ? px.toFixed(1) : px}${tag}</td><td class="${cls}">${inr(y)}</td><td class="${cls}">${y >= 0 ? 'PROFIT' : 'LOSS'}</td></tr>`;
+    return `<tr class="${y >= 0 ? 'row-up' : 'row-dn'}${rowCls[m] || ''}"><td>${fmtPx(px)}${tag}</td><td class="${cls}">${inr(y)}</td><td class="${cls}">${y >= 0 ? 'PROFIT' : 'LOSS'}</td></tr>`;
   }).join('');
   $('rowHint').textContent = keys.length + ' ROWS';
   $('results').style.display = 'block';
@@ -578,7 +833,7 @@ function drawChart(positions, lot, from, to, a, spot){
           titleFont: { family:'Arial', size:11, weight:'bold' }, bodyFont: { family:'Arial', size:11 },
           padding: 9, displayColors: false,
           callbacks: {
-            title: it => 'SILVER MINI @ ' + Math.round(it[0].parsed.x),
+            title: it => (curSym() || 'PRICE') + ' @ ' + fmtPx(it[0].parsed.x),
             label: it => (it.dataset.label === 'P&L' ? '' : it.dataset.label + '  ') + inr(it.parsed.y)
           }
         }
@@ -586,7 +841,7 @@ function drawChart(positions, lot, from, to, a, spot){
       scales: {
         x: { type:'linear', min:from, max:to,
              grid: { color: line, drawTicks:false },
-             ticks: { font:{family:'Arial', size:10}, color: muted, maxTicksLimit:6, padding:6, callback: v => Math.round(v) } },
+             ticks: { font:{family:'Arial', size:10}, color: muted, maxTicksLimit:6, padding:6, callback: v => fmtPx(v) } },
         y: { grid: { color: c => c.tick.value === 0 ? muted : line, lineWidth: c => c.tick.value === 0 ? 1.5 : 1, drawTicks:false },
              ticks: { font:{family:'Arial', size:10}, color: muted, padding:6, callback: v => inrShort(v) } }
       }
@@ -620,7 +875,7 @@ function exportCsv(){
   if (!rows.length){ warn('Nothing to export yet — add a leg first.'); return; }
   const blob = new Blob(['Price,PnL,Status\n' + rows.join('\n')], { type:'text/csv' });
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob); a.download = 'silver-payoff.csv'; a.click();
+  a.href = URL.createObjectURL(blob); a.download = (curSym() || 'stock') + '-payoff.csv'; a.click();
   URL.revokeObjectURL(a.href);
 }
 
@@ -628,12 +883,13 @@ function exportCsv(){
 document.addEventListener('input', e => { if (e.target.closest('#posBody, .settings')) refresh(); });
 document.addEventListener('change', e => {
   if (e.target.id === 'contract'){
-    const v = +e.target.value;
-    if (v) { $('lotSize').value = v; refresh(); }
+    applySym(e.target.value, true); refresh();
   } else if (e.target.closest('#posBody, .settings')) refresh();
 });
 
 applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+loadSyms(); fillSymSelect();
+$('symFile').addEventListener('change', e => { if (e.target.files[0]) restoreSyms(e.target.files[0]); e.target.value = ''; });
 
 (function init(){
   const saved = store.get(LSK);
@@ -643,12 +899,14 @@ applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'li
       $('lotSize').value = c.s.l; $('rangeFrom').value = c.s.f; $('rangeTo').value = c.s.t;
       if (c.s.st) $('priceStep').value = c.s.st;
       if (c.s.sp) $('spot').value = c.s.sp;
-      if (c.s.c) $('contract').value = c.s.c;
+      if (c.s.c) fillSymSelect(c.s.c);
       (c.p || []).forEach(p => addRow({ t: p.t === 'Fut' ? 'FUT' : p.t, s: p.s, dir: p.d, l: p.l, a: p.a }));
     } catch(e){ addRow(); }
   }
+  applySym(curSym(), !saved);
   if (!document.querySelectorAll('#posBody tr').length) addRow();
   refresh();
+  if (!syms.length) openSyms(true);
 })();
 
 const sc = document.createElement('script');
