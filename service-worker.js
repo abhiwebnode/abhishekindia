@@ -6,7 +6,7 @@ const CORE = [
   '/stock-sniper-pro.html','/mcx-payoff-tools.html',
   '/crude.html','/gold.html','/silver.html','/usdinr.html',
   '/css/site.css','/manifest.json',
-  '/img/logo-mark.webp','/img/favicon.svg','/img/placeholder.svg'
+  '/img/maskable-512.png','/img/favicon.svg','/img/placeholder.svg'
 ];
 
 // Precache core shell; tolerate any single missing file.
