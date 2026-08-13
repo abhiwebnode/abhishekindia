@@ -14,6 +14,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Edu+TAS+Beginner:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#16243d">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Abhishek">
 <script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 </head>
 <body>
@@ -28,7 +34,7 @@
       <a href="journal.html">Journal</a>
       <a href="index.html#contact" class="nav-cta">Get in touch</a>
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">🌙</button>
-    </div>
+      <button class="nav-install" id="installBtn" hidden>Install app</button>
     </div>
   </div>
 </nav>
@@ -45,6 +51,7 @@
           <span class="chip">Pine Script v6 · TradingView</span>
         </div>
         <div class="btns"><span class="chip">Not public yet</span></div>
+        
       </div>
       <div><img src="img/stock-sniper-pro-hero.webp" alt="Stock Sniper Pro screenshot" class="pd-hero-img" loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'"></div>
     </div>
@@ -114,5 +121,40 @@ var tg=document.getElementById("themeToggle");
 function setThemeIcon(){var d=document.documentElement.getAttribute("data-theme")==="dark";if(tg)tg.textContent=d?"☀️":"🌙";}
 setThemeIcon();
 if(tg)tg.addEventListener("click",function(){var d=document.documentElement.getAttribute("data-theme")==="dark";var n=d?"light":"dark";document.documentElement.setAttribute("data-theme",n);try{localStorage.setItem("theme",n);}catch(e){}setThemeIcon();});
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/service-worker.js").catch(function(){});});}
+(function(){
+  var deferredPrompt=null, installBtn=document.getElementById("installBtn"), shown=false;
+  var isStandalone=(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+  var ua=navigator.userAgent||"", isIOS=/iphone|ipad|ipod/i.test(ua)&&!window.MSStream;
+  var dismissed=false; try{dismissed=localStorage.getItem("pwa_dismissed")==="1";}catch(e){}
+  function remember(){try{localStorage.setItem("pwa_dismissed","1");}catch(e){}}
+  function triggerInstall(){ if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.finally(function(){deferredPrompt=null;hideModal();});} }
+  function hideModal(){var m=document.getElementById("pwaModal");if(m)m.classList.remove("show");}
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e;if(installBtn)installBtn.hidden=false;if(shown){var old=document.getElementById("pwaModal");if(old)old.remove();shown=false;showModal();}});
+  window.addEventListener("appinstalled",function(){if(installBtn)installBtn.hidden=true;hideModal();remember();});
+  if(installBtn)installBtn.addEventListener("click",triggerInstall);
+  function showModal(){
+    if(shown||isStandalone||dismissed)return; shown=true;
+    var mode=deferredPrompt?"prompt":(isIOS?"ios":"manual");
+    var sub=mode==="ios"?"Tap the Share icon, then choose \u201CAdd to Home Screen\u201D."
+          :mode==="manual"?"Open your browser menu and choose \u201CInstall app\u201D to add it to your device."
+          :"Add AbhishekIndia to your home screen for quick, full-screen access — even offline.";
+    var btn=mode==="prompt"?'<button class="pwa-go" id="pwaGo">Install app</button>':"";
+    var m=document.createElement("div"); m.id="pwaModal"; m.className="pwa-modal";
+    m.innerHTML='<div class="pwa-card" role="dialog" aria-modal="true" aria-label="Install AbhishekIndia">'
+      +'<button class="pwa-x" id="pwaX" aria-label="Close">\u00D7</button>'
+      +'<img src="img/logo-mark.webp" alt="" class="pwa-ico">'
+      +'<h3>Install AbhishekIndia</h3>'
+      +'<p>'+sub+'</p>'+btn
+      +'<button class="pwa-later" id="pwaLater">Maybe later</button>'
+      +'</div>';
+    document.body.appendChild(m); requestAnimationFrame(function(){m.classList.add("show");});
+    var go=document.getElementById("pwaGo"); if(go)go.addEventListener("click",triggerInstall);
+    document.getElementById("pwaX").addEventListener("click",function(){hideModal();remember();});
+    document.getElementById("pwaLater").addEventListener("click",function(){hideModal();remember();});
+    m.addEventListener("click",function(ev){if(ev.target===m){hideModal();remember();}});
+  }
+  setTimeout(showModal,5000);
+})();
 </script>
 </body></html>

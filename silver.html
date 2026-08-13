@@ -166,6 +166,8 @@
   .sbar-switch a.cur{background:var(--brass);color:#fff;border-color:transparent}
 </style>
 <script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="img/icon-192.png">
 </head>
 <body>
 <div class="sbar">
@@ -655,5 +657,6 @@ sc.onload = () => { chartReady = true; $('chartFallback').style.display = 'none'
 sc.onerror = () => { $('chartFallback').style.display = 'flex'; };
 document.head.appendChild(sc);
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/service-worker.js").catch(function(){});});}</script>
 </body>
 </html>

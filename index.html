@@ -41,7 +41,7 @@
 <section id="home">
   <div class="hero-grid">
     <div class="hero-left">
-      <div class="greet">👋 Hi, I'm Abhishek</div>
+      <div class="greet">👋 Hi, I'm Abhishek Kumar</div>
       <h1>I build products from Delhi&nbsp;NCR.</h1>
       <div class="loc">Solo founder &amp; full-stack builder</div>
     </div>
@@ -226,25 +226,34 @@ if("serviceWorker" in navigator){window.addEventListener("load",function(){navig
   var isStandalone=(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
   var ua=navigator.userAgent||"", isIOS=/iphone|ipad|ipod/i.test(ua)&&!window.MSStream;
   var dismissed=false; try{dismissed=localStorage.getItem("pwa_dismissed")==="1";}catch(e){}
-  function triggerInstall(){ if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.finally(function(){deferredPrompt=null;hideBanner();});} }
-  function hideBanner(){var b=document.getElementById("pwaBanner");if(b)b.classList.remove("show");}
-  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e;if(installBtn)installBtn.hidden=false;if(shown){shown=false;var old=document.getElementById("pwaBanner");if(old)old.remove();showBanner();}});
-  window.addEventListener("appinstalled",function(){if(installBtn)installBtn.hidden=true;hideBanner();try{localStorage.setItem("pwa_dismissed","1");}catch(e){}});
+  function remember(){try{localStorage.setItem("pwa_dismissed","1");}catch(e){}}
+  function triggerInstall(){ if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.finally(function(){deferredPrompt=null;hideModal();});} }
+  function hideModal(){var m=document.getElementById("pwaModal");if(m)m.classList.remove("show");}
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e;if(installBtn)installBtn.hidden=false;if(shown){var old=document.getElementById("pwaModal");if(old)old.remove();shown=false;showModal();}});
+  window.addEventListener("appinstalled",function(){if(installBtn)installBtn.hidden=true;hideModal();remember();});
   if(installBtn)installBtn.addEventListener("click",triggerInstall);
-  function showBanner(){
+  function showModal(){
     if(shown||isStandalone||dismissed)return; shown=true;
     var mode=deferredPrompt?"prompt":(isIOS?"ios":"manual");
-    var sub=mode==="ios"?"Tap the Share icon, then \u201CAdd to Home Screen\u201D."
-          :mode==="manual"?"Open your browser menu, then choose \u201CInstall app\u201D."
-          :"Add it to your home screen for quick access.";
-    var btn=mode==="prompt"?'<button class="pwa-go" id="pwaGo">Install</button>':"";
-    var b=document.createElement("div"); b.id="pwaBanner"; b.className="pwa-banner";
-    b.innerHTML='<img src="img/logo-mark.webp" alt="" class="pwa-ico"><div class="pwa-txt"><b>Install AbhishekIndia</b><span>'+sub+'</span></div>'+btn+'<button class="pwa-x" id="pwaX" aria-label="Dismiss">\u00D7</button>';
-    document.body.appendChild(b); requestAnimationFrame(function(){b.classList.add("show");});
+    var sub=mode==="ios"?"Tap the Share icon, then choose \u201CAdd to Home Screen\u201D."
+          :mode==="manual"?"Open your browser menu and choose \u201CInstall app\u201D to add it to your device."
+          :"Add AbhishekIndia to your home screen for quick, full-screen access — even offline.";
+    var btn=mode==="prompt"?'<button class="pwa-go" id="pwaGo">Install app</button>':"";
+    var m=document.createElement("div"); m.id="pwaModal"; m.className="pwa-modal";
+    m.innerHTML='<div class="pwa-card" role="dialog" aria-modal="true" aria-label="Install AbhishekIndia">'
+      +'<button class="pwa-x" id="pwaX" aria-label="Close">\u00D7</button>'
+      +'<img src="img/logo-mark.webp" alt="" class="pwa-ico">'
+      +'<h3>Install AbhishekIndia</h3>'
+      +'<p>'+sub+'</p>'+btn
+      +'<button class="pwa-later" id="pwaLater">Maybe later</button>'
+      +'</div>';
+    document.body.appendChild(m); requestAnimationFrame(function(){m.classList.add("show");});
     var go=document.getElementById("pwaGo"); if(go)go.addEventListener("click",triggerInstall);
-    document.getElementById("pwaX").addEventListener("click",function(){hideBanner();try{localStorage.setItem("pwa_dismissed","1");}catch(e){}});
+    document.getElementById("pwaX").addEventListener("click",function(){hideModal();remember();});
+    document.getElementById("pwaLater").addEventListener("click",function(){hideModal();remember();});
+    m.addEventListener("click",function(ev){if(ev.target===m){hideModal();remember();}});
   }
-  setTimeout(showBanner,5000);
+  setTimeout(showModal,5000);
 })();
 </script>
 </body></html>
