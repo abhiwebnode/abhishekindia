@@ -44,7 +44,7 @@ self.addEventListener('fetch', (e) => {
         cache.put(req, fresh.clone());
         return fresh;
       } catch (err) {
-        return (await caches.match(req)) || (await caches.match('/index.html'));
+        return (await caches.match(req)) || (await caches.match('/'));
       }
     })());
     return;
