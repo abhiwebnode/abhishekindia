@@ -14,12 +14,18 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Edu+TAS+Beginner:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#16243d">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Abhishek">
 <script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 </head>
 <body>
 <nav>
   <div class="container nav-in">
-    <a href="/" class="brand"><img src="img/logo-mark.png" alt="AbhishekIndia" class="brand-logo"></a>
+    <a href="/" class="brand"><img src="img/logo-mark.webp" alt="AbhishekIndia" class="brand-logo"></a>
     <button class="burger" id="burger" aria-label="Menu">&#9776;</button>
     <div class="nav-links" id="navLinks">
       <a href="#about">About</a>
@@ -28,18 +34,16 @@
       <a href="journal.html">Journal</a>
       <a href="#contact" class="nav-cta">Get in touch</a>
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">🌙</button>
-    </div>
+      <button class="nav-install" id="installBtn" hidden>Install app</button>
     </div>
   </div>
 </nav>
 <section id="home">
   <div class="hero-grid">
-<div class="hero-left">
-      <div class="greet">👋 Hi, I'm Abhishek Kumar</div>
+    <div class="hero-left">
+      <div class="greet">👋 Hi, I'm Abhishek</div>
       <h1>I build products from Delhi&nbsp;NCR.</h1>
       <div class="loc">Solo founder &amp; full-stack builder</div>
-      <img src="img/hero-left.webp" alt="Abhishek" class="hero-left-img"
-           loading="lazy" onerror="this.onerror=null;this.src='img/placeholder.svg'">
     </div>
     <div class="hero-right">
       <div class="hero-right-in">
@@ -154,7 +158,7 @@
         &nbsp; <a href="stock-sniper-pro.html" style="font-family:var(--display);font-weight:600;font-size:14px">Read more →</a>
       </div>
       <a href="stock-sniper-pro.html" class="proj-thumb-link">
-        <div class="proj-thumb" data-mono="S" style="background:linear-gradient(135deg,#16243d,#3a5680)">S<img class="thumb-ico" src="img/stock-sniper-pro-icon.webp" alt="Stock Sniper Pro icon" loading="lazy" onerror="this.style.display='none'"></div>
+        <div class="proj-thumb" data-mono="S" style="background:linear-gradient(135deg,#16243d,#3a5680)"><img class="thumb-ico" src="img/stock-sniper-pro-icon.webp" alt="Stock Sniper Pro icon" loading="lazy" onerror="this.style.display='none'"></div>
       </a>
       <a class="proj-visit" href="stock-sniper-pro.html" aria-label="About Stock Sniper Pro">→</a>
     </div></div>
@@ -167,7 +171,7 @@
         &nbsp; <a href="mcx-payoff-tools.html" style="font-family:var(--display);font-weight:600;font-size:14px">Read more →</a>
       </div>
       <a href="mcx-payoff-tools.html" class="proj-thumb-link">
-        <div class="proj-thumb" data-mono="M" style="background:linear-gradient(135deg,#c0392b,#ff7b6b)">M<img class="thumb-ico" src="img/mcx-payoff-tools-icon.webp" alt="MCX Payoff Tools icon" loading="lazy" onerror="this.style.display='none'"></div>
+        <div class="proj-thumb" data-mono="M" style="background:linear-gradient(135deg,#c0392b,#ff7b6b)"><img class="thumb-ico" src="img/mcx-payoff-tools-icon.webp" alt="MCX Payoff Tools icon" loading="lazy" onerror="this.style.display='none'"></div>
       </a>
       <a class="proj-visit" href="mcx-payoff-tools.html" aria-label="About MCX Payoff Tools">→</a>
     </div></div>
@@ -216,5 +220,31 @@ var tg=document.getElementById("themeToggle");
 function setThemeIcon(){var d=document.documentElement.getAttribute("data-theme")==="dark";if(tg)tg.textContent=d?"☀️":"🌙";}
 setThemeIcon();
 if(tg)tg.addEventListener("click",function(){var d=document.documentElement.getAttribute("data-theme")==="dark";var n=d?"light":"dark";document.documentElement.setAttribute("data-theme",n);try{localStorage.setItem("theme",n);}catch(e){}setThemeIcon();});
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/service-worker.js").catch(function(){});});}
+(function(){
+  var deferredPrompt=null, installBtn=document.getElementById("installBtn"), shown=false;
+  var isStandalone=(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+  var ua=navigator.userAgent||"", isIOS=/iphone|ipad|ipod/i.test(ua)&&!window.MSStream;
+  var dismissed=false; try{dismissed=localStorage.getItem("pwa_dismissed")==="1";}catch(e){}
+  function triggerInstall(){ if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.finally(function(){deferredPrompt=null;hideBanner();});} }
+  function hideBanner(){var b=document.getElementById("pwaBanner");if(b)b.classList.remove("show");}
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e;if(installBtn)installBtn.hidden=false;if(shown){shown=false;var old=document.getElementById("pwaBanner");if(old)old.remove();showBanner();}});
+  window.addEventListener("appinstalled",function(){if(installBtn)installBtn.hidden=true;hideBanner();try{localStorage.setItem("pwa_dismissed","1");}catch(e){}});
+  if(installBtn)installBtn.addEventListener("click",triggerInstall);
+  function showBanner(){
+    if(shown||isStandalone||dismissed)return; shown=true;
+    var mode=deferredPrompt?"prompt":(isIOS?"ios":"manual");
+    var sub=mode==="ios"?"Tap the Share icon, then \u201CAdd to Home Screen\u201D."
+          :mode==="manual"?"Open your browser menu, then choose \u201CInstall app\u201D."
+          :"Add it to your home screen for quick access.";
+    var btn=mode==="prompt"?'<button class="pwa-go" id="pwaGo">Install</button>':"";
+    var b=document.createElement("div"); b.id="pwaBanner"; b.className="pwa-banner";
+    b.innerHTML='<img src="img/logo-mark.webp" alt="" class="pwa-ico"><div class="pwa-txt"><b>Install AbhishekIndia</b><span>'+sub+'</span></div>'+btn+'<button class="pwa-x" id="pwaX" aria-label="Dismiss">\u00D7</button>';
+    document.body.appendChild(b); requestAnimationFrame(function(){b.classList.add("show");});
+    var go=document.getElementById("pwaGo"); if(go)go.addEventListener("click",triggerInstall);
+    document.getElementById("pwaX").addEventListener("click",function(){hideBanner();try{localStorage.setItem("pwa_dismissed","1");}catch(e){}});
+  }
+  setTimeout(showBanner,5000);
+})();
 </script>
 </body></html>
