@@ -109,24 +109,133 @@
     </div>
     <!-- fallback entries used only if the Sheet can't be reached -->
     <template id="jrFallback">
+```html
 <article class="jr-entry in">
-      <div class="jr-date">August 2026</div>
-      <h2>Launched abhishekindia.com</h2>
-      <div class="jr-tags"><span class="jr-tag">site</span><span class="jr-tag">meta</span></div>
-      <p>Finally gave my projects a proper home. Built this site as a single place to show what I'm building — hyperlocal, utility tools, trading experiments — instead of it all being scattered. Static, fast, and easy to update. This journal is where I'll log what I ship next.</p>
-    </article>
+  <div class="jr-date">August 2026</div>
+  <h2>NearPop — Making It Easier for Merchants to Claim Their Business</h2>
+  <div class="jr-tags"><span class="jr-tag">NearPop</span><span class="jr-tag">hyperlocal</span><span class="jr-tag">merchant onboarding</span><span class="jr-tag">QR code</span><span class="jr-tag">local business</span><span class="jr-tag">claim</span><span class="jr-tag">listing</span><span class="jr-tag">product development</span></div>
+  <p>As I continue building NearPop, I realised that adding local businesses to the platform is only one part of the job. The bigger question is: how does the real merchant take control of their listing? NearPop can create a business listing through the admin system. Later, when the actual merchant finds that listing, they can claim it and connect it with their NearPop account. This gives merchants a simple way to take control of their business information on the platform.</p>
+  <p>But I wanted to make merchant onboarding even easier. So I also worked on a QR standee system. The idea is that a merchant first registers on NearPop. After registration, the merchant can get a blank, pre-printed NearPop QR standee. It does not have to be specially printed for that particular shop. The merchant can then associate that standee with their listing and immediately place it at the shop.</p>
+  <p>This is similar to the simple QR experience people are already familiar with from services like Paytm. A customer sees the QR code, scans it and can reach the merchant's NearPop presence.</p>
+  <p>The advantage of using a pre-printed standee is speed. I don't have to wait for every merchant to register and then print a customised standee. I can keep blank standees ready, and a merchant can start using one as soon as they join.</p>
+  <p>For me, this solves two problems at the same time: existing listings can be claimed, and new merchants can quickly connect their physical shop with their digital presence on NearPop. It is a small feature, but I think these small systems will be important in making NearPop work in the real world.</p>
+</article>
+
 <article class="jr-entry in">
-      <div class="jr-date">July 2026</div>
-      <h2>UploadSure got a blueprint redesign</h2>
-      <div class="jr-tags"><span class="jr-tag">uploadsure</span><span class="jr-tag">design</span></div>
-      <p>The tools worked, but the site looked like every other file-compressor out there. Rolled out a full visual overhaul — a technical-drafting look with a navy-and-cyan palette and monospace type — so it finally feels like its own thing. Also expanded the PDF kit from 3 tools to 10.</p>
-    </article>
+  <div class="jr-date">August 2026</div>
+  <h2>Re-launched abhishekindia.com</h2>
+  <div class="jr-tags"><span class="jr-tag">site</span><span class="jr-tag">meta</span></div>
+  <p>Finally gave my projects a proper home. Built this site as a single place to show what I'm building — hyperlocal, utility tools, trading experiments — instead of it all being scattered. Static, fast, and easy to update. This journal is where I'll log what I ship next.</p>
+</article>
+
 <article class="jr-entry in">
-      <div class="jr-date">July 2026</div>
-      <h2>Built payoff calculators for the metals I trade</h2>
-      <div class="jr-tags"><span class="jr-tag">trading</span><span class="jr-tag">tools</span></div>
-      <p>I kept eyeballing options payoffs before entering positions, so I built small single-file calculators for the exact contracts I trade — crude, Gold Mini, Silver Mini and USDINR — each with the right lot sizes and strike steps. Plots max profit, max loss, breakevens and the whole curve.</p>
-    </article>
+  <div class="jr-date">June 2026</div>
+  <h2>UploadSure — Born From a Simple Problem</h2>
+  <div class="jr-tags"><span class="jr-tag">UploadSure</span><span class="jr-tag">image compression</span><span class="jr-tag">PDF</span><span class="jr-tag">online forms</span><span class="jr-tag">privacy</span><span class="jr-tag">offline processing</span><span class="jr-tag">web tools</span></div>
+  <p>UploadSure.in started with a very simple problem I faced myself. I needed to upload an identity card, but the form had a strict file-size requirement. The image had to be reduced to a particular number of KB. I searched for a tool that could do it easily, but most of the websites I found either uploaded the image to their servers or were not designed specifically around the requirements of Indian online forms.</p>
+  <p>That made me think: why not build a tool where the file can be processed directly in the browser? That was the starting point for UploadSure.</p>
+  <p>The idea was to create a collection of simple tools for people filling out Indian government, examination and recruitment forms. These forms often have very specific requirements — image dimensions, file size, signatures, photographs and PDF sizes. A seemingly small technical problem can become frustrating when you are sitting in front of an application form with a deadline.</p>
+  <p>UploadSure was built around making that process easier. One of the things I particularly wanted was offline processing. When possible, the image or document should be processed locally in the browser instead of being unnecessarily uploaded to a server. Apart from being faster in many situations, this also makes sense when people are dealing with documents containing personal information.</p>
+  <p>What began with my own requirement to compress an identity card eventually became a broader collection of tools for photographs, signatures and PDFs. Once again, the pattern was the same: I faced a small problem, couldn't find exactly what I wanted, and decided to build it myself.</p>
+</article>
+
+<article class="jr-entry in">
+  <div class="jr-date">June 2026</div>
+  <h2>TaxSavingLab — Making Tax Calculation Easier for Traders</h2>
+  <div class="jr-tags"><span class="jr-tag">TaxSavingLab</span><span class="jr-tag">stock market</span><span class="jr-tag">trading</span><span class="jr-tag">income tax</span><span class="jr-tag">capital gains</span><span class="jr-tag">tax calculator</span><span class="jr-tag">FinTech</span></div>
+  <p>After building HACP, I started working on another problem that was closely connected to my interest in the stock market — tax calculation for traders and investors. That led to TaxSavingLab.com.</p>
+  <p>The idea behind TaxSavingLab is simple: stock market participants often think about tax only when the financial year is coming to an end. By then, it can be difficult to understand how much tax has already been generated, what the potential liability could be, and what decisions might affect the final calculation. I wanted to build a tool that could be useful before, during and after the financial year.</p>
+  <p>TaxSavingLab is designed as a free tax-calculation platform for people dealing with stock-market income. Instead of waiting until the end of the year and trying to work everything out at once, the idea is to give traders and investors a way to estimate and understand their tax position while they are still making decisions.</p>
+  <p>Building this was different from my earlier projects because taxation has a lot of rules, conditions and calculations behind what appears to be a simple number on the screen. I had to think not only about the interface, but also about how the calculations should work and how to make the results understandable to someone who isn't a tax expert.</p>
+  <p>Like many of my projects, TaxSavingLab started with a simple question: Can I build a useful tool that solves a problem I personally see around me? TaxSavingLab was my attempt to turn that question into something practical — another small product born from curiosity, coding and the desire to make complicated things a little easier.</p>
+</article>
+
+<article class="jr-entry in">
+  <div class="jr-date">2025</div>
+  <h2>HACP — Building My Own Trading Indicator</h2>
+  <div class="jr-tags"><span class="jr-tag">HACP</span><span class="jr-tag">Heikin Ashi Candle Pulse</span><span class="jr-tag">Pine Script</span><span class="jr-tag">TradingView</span><span class="jr-tag">trading</span><span class="jr-tag">technical analysis</span></div>
+  <p>While working on my other projects, I also kept exploring another area that had interested me for years — trading and technical analysis. Around 2025, I started experimenting with Pine Script and eventually built my own TradingView indicator called HACP — Heikin Ashi Candle Pulse.</p>
+  <p>The idea behind HACP came from my interest in Heikin Ashi candles. Rather than simply looking at individual candles, I wanted to create something that could help identify the underlying pulse or momentum of a move in a way that was easier to interpret.</p>
+  <p>Building it was another kind of learning experience. This time, I wasn't building a website or an app. I was developing a trading tool, translating an idea into logic and then testing that logic against charts and different market conditions.</p>
+  <p>Like many of my earlier projects, it started as an experiment. I kept modifying it, testing different ideas and trying to make the indicator useful rather than simply making it look good on a chart.</p>
+  <p>Eventually, HACP became a proper Pine Script project for TradingView, adding another completely different type of product to the collection of things I had built over the years.</p>
+  <p>What I find interesting about my journey is that the projects keep changing. I went from websites and blogging, to coupons and deals, to a hyperlocal app, and now to building tools for traders. The technology changes, the problems change, and the learning curve starts again. But the underlying habit hasn't changed much since Abhilakshya.com: I get an idea, I start building it, and I see where it takes me.</p>
+</article>
+
+<article class="jr-entry in">
+  <div class="jr-date">2022–2026</div>
+  <h2>NearPop — An Idea That Took Four Years to Launch</h2>
+  <div class="jr-tags"><span class="jr-tag">NearPop</span><span class="jr-tag">hyperlocal</span><span class="jr-tag">startup</span><span class="jr-tag">app development</span><span class="jr-tag">bootstrapped</span><span class="jr-tag">entrepreneurship</span><span class="jr-tag">journey</span></div>
+  <p>After CouponBoyz, I wasn't looking for another website idea. I wanted to build something that genuinely interested me. That idea eventually became NearPop.</p>
+  <p>The thought was simple: why should I search for things around me when the things around me should find me? A nearby shop running a deal, a PG available around the corner, a flat for rent, or a local job opportunity — these are all things that become useful because of where you are.</p>
+  <p>I started developing NearPop in 2022. What I imagined would be a straightforward project turned into one of the most difficult things I have ever tried to build.</p>
+  <p>There were many hurdles along the way. I built a team, worked with different people and, at different stages, team members walked out for various reasons. Each time, the project had to slow down, change direction or start again. There were plenty of moments when I wondered whether I should simply abandon the idea.</p>
+  <p>But I kept coming back to it. Finally, after almost four years of development, testing, rebuilding and dealing with everything that comes with building a startup without outside funding, NearPop was launched around April 2026.</p>
+  <p>Today, NearPop is a hyperlocal discovery app covering local deals, shops, PGs, flats and jobs, with location-based discovery and proximity notifications at its core.</p>
+  <p>Launching was a milestone, but it wasn't the finish line. In fact, a completely new challenge started after launch — getting enough local businesses and users onto the platform to make the idea truly useful.</p>
+  <p>Four years to build it. Now comes the real test.</p>
+</article>
+
+<article class="jr-entry in">
+  <div class="jr-date">April 2025</div>
+  <h2>Built payoff calculators for the metals I trade</h2>
+  <div class="jr-tags"><span class="jr-tag">trading</span><span class="jr-tag">tools</span></div>
+  <p>I kept eyeballing options payoffs before entering positions, so I built small single-file calculators for the exact contracts I trade — crude, Gold Mini, Silver Mini and USDINR — each with the right lot sizes and strike steps. Plots max profit, max loss, breakevens and the whole curve.</p>
+</article>
+
+<article class="jr-entry in">
+  <div class="jr-date">July 2018</div>
+  <h2>Build CouponBoyz.com — The Website That Stayed</h2>
+  <div class="jr-tags"><span class="jr-tag">CouponBoyz</span><span class="jr-tag">coupons</span><span class="jr-tag">deals</span><span class="jr-tag">affiliate marketing</span><span class="jr-tag">WordPress</span><span class="jr-tag">e-commerce</span><span class="jr-tag">website</span><span class="jr-tag">journey</span></div>
+  <p>After experimenting with several websites and eventually stepping away from most of them, I came back to the internet with a project that would become much more long-lasting: CouponBoyz.com.</p>
+  <p>The idea was simple — help people find coupons, promo codes and deals for online shopping. Instead of building another personal website, this time I was trying to create something with a practical purpose and a business model behind it.</p>
+  <p>CouponBoyz grew into a proper coupon and deals platform, with individual store pages, coupon listings and offers. The site eventually covered a large number of retailers and categories, and the basic model was straightforward: users could find a coupon, view the code and visit the retailer through the website.</p>
+  <p>There is also an interesting part of the journey that I discovered while looking back at the technical history. In 2019, I was still actively maintaining the website and troubleshooting its WordPress-based coupon theme. A support post from that time shows me working through a mobile-version problem on CouponBoyz.</p>
+  <p>Unlike my earlier websites, CouponBoyz didn't disappear after a short experiment. I kept developing it, changing its design, adding stores and coupons, improving the technology and trying different ways of attracting users.</p>
+  <p>Today, the site is still online and continues to operate as a coupon and deals platform.</p>
+  <p>That makes CouponBoyz an important milestone in my journey. It was the point where building websites started becoming less about experimentation and more about building something that could actually keep running for years.</p>
+</article>
+
+<article class="jr-entry in">
+  <div class="jr-date">2013–2016</div>
+  <h2>More Websites, More Experiments — And Then a Pause</h2>
+  <div class="jr-tags"><span class="jr-tag">I Love Sai Baba</span><span class="jr-tag">Abhishek Academy</span><span class="jr-tag">AskAbhi</span><span class="jr-tag">websites</span><span class="jr-tag">experiments</span><span class="jr-tag">journey</span></div>
+  <p>After TheAdvik.com, I continued experimenting with websites. I had already discovered that the internet could be used for much more than simply publishing articles. Every new domain gave me an opportunity to try a different idea.</p>
+  <p>Among the next websites I worked on were ILoveSaiBaba.com, AbhishekAcademy.com and AskAbhi.com. Each one came from a different thought or interest. They were not part of one big business plan. At that stage, I was still exploring — trying different website ideas, learning how to build and manage them, and figuring out what people might actually find useful.</p>
+  <p>That period is difficult to reconstruct today because most of those websites are no longer online, and very little reliable information about them remains indexed on the internet. I don't want to fill those gaps with things I don't remember or can't verify.</p>
+  <p>What I do remember is that I kept coming back to the same thing: building something on the web.</p>
+  <p>Eventually, personal commitments made it difficult to give these projects the time they needed. Running a website is not just about creating it. There is hosting, content, updates, maintenance, promotion and, most importantly, the time to keep showing up.</p>
+  <p>So I made the decision to stop. One by one, I closed these websites. Eventually, Abhilakshya.com and TheAdvik.com, which had been some of my earliest experiments, were also gone.</p>
+  <p>For a while, it felt like that chapter of my internet journey had ended.</p>
+  <p>Looking back now, I don't see those websites as failures. They were experiments. And every one of them taught me something that I would eventually use again.</p>
+</article>
+
+<article class="jr-entry in">
+  <div class="jr-date">April 2012</div>
+  <h2>TheAdvik.com — Turning a Website Into a Personal Photo Journal</h2>
+  <div class="jr-tags"><span class="jr-tag">TheAdvik</span><span class="jr-tag">personal website</span><span class="jr-tag">WordPress</span><span class="jr-tag">photography</span><span class="jr-tag">yearly projects</span></div>
+  <p>After Abhilakshya.com, I started another website called TheAdvik.com. This one was quite different. Instead of focusing on technology tutorials and learning resources, it was much more personal.</p>
+  <p>The tagline on the site was simple: “It’s my life!!!” The website description called it a personal website where photographs and videos could be found.</p>
+  <p>I built it using WordPress and spent quite a bit of effort making it feel like a proper photo website. I used a photography-focused theme, a photo album plugin, image galleries and even lightbox effects for viewing photographs.</p>
+  <p>There is something interesting about looking at this site now. I wasn't trying to build a startup or a business. I was simply experimenting with the internet as a place to document life.</p>
+  <p>But the technical work was teaching me more: WordPress, themes, plugins, photography galleries, SEO, analytics and managing a real website.</p>
+  <p>At the time, these probably felt like separate experiments. Looking back, they were all part of the same journey.</p>
+</article>
+
+<article class="jr-entry in">
+  <div class="jr-date">March 2011</div>
+  <h2>Abhilakshya.com — One of My First Websites</h2>
+  <div class="jr-tags"><span class="jr-tag">Abhilakshya.com</span><span class="jr-tag">early website</span><span class="jr-tag">WordPress</span><span class="jr-tag">blogging</span><span class="jr-tag">technology</span><span class="jr-tag">learning</span></div>
+  <p>Long before AbhishekIndia.com, there was Abhilakshya.com. Looking back at the website today feels a little like opening an old notebook.</p>
+  <p>The site was built around a simple idea: share useful things that I was learning and make them available to others. Its tagline was “Your Online Learning Resource.”</p>
+  <p>The website had articles, downloads, learning resources, software for Linux and Windows, games, and even a section for friends' websites.</p>
+  <p>It was running on WordPress, which was already becoming a convenient way for someone like me to publish content without building everything from scratch.</p>
+  <p>The articles are probably the most interesting part to see today. I was writing practical tutorials about things I was figuring out myself — from shrinking volumes in Windows Vista and Windows 7 to blocking websites using the hosts file and browsing Twitter through HTTPS.</p>
+  <p>At the time, I probably didn't think of this as the beginning of a long journey of building websites. It was simply a website I was running and experimenting with.</p>
+  <p>But that is exactly what makes it important now. Abhilakshya.com was one of the early steps that taught me something I still do today: build something, learn something, and put it on the internet.</p>
+</article>
+```
+
     </template>
   </div>
 </div>
